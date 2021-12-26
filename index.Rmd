@@ -1,0 +1,39 @@
+---
+title: "Generalized Linear and Mixed Effects Models"
+#author: "Ofer Engel"
+output: html_document
+---
+
+<style>
+.column-left{
+  float: left;
+  width: 50%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 50%;
+  text-align: right;
+}
+</style>
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = F)
+library(knitr)
+```
+
+<div class="column-left">
+What is to be done when different groups in the population exhibit very different properties and relationships between properties? What errors might we make when we aggregate all the data together and analyse it as one? And how do we avoid these errors if we are not sure which groups are we to consider together and which should we consider apart? 
+
+This is an applied course in how to extend the linear regression models in a way that would be more amenable to causal analysis. 
+
+</div>
+
+
+<div class="column-right">
+```{r, fig.width=4}
+include_graphics("images/index-penguins.jpg")
+```
+</div>
+
+
