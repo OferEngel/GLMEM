@@ -1,6 +1,6 @@
 name: "Generalized Linear Mixed Effects"
 creative_commons: CC BY-NC
-exclude: ["*.Rmd", "*.csv", "*.xlsx", "./backup/*"]
+exclude: ["*.Rmd", "*.csv", "*.xlsx", "./backup/*", "*.rmdx"]
 output_dir: "docs"
 navbar:
   title: "Generalized Linear Mixed Effects"

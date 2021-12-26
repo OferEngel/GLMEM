@@ -37,7 +37,7 @@ This is an applied course in how to extend the linear regression models in a way
 
 
 <div class="column-right">
-```{r, fig.width=4}
+```{r course-structure, fig.width=4}
 include_graphics("images/course-structure.jpg")
 # include_graphics("images/index-penguins.jpg")
 ```
@@ -68,7 +68,7 @@ Completing the assignment involves watching the video and reading the text befor
 
 
 <div class="column-right">
-```{r, fig.width=4}
+```{r perusall, fig.width=4}
 
 include_graphics("images/Perusall.jpg")
 
@@ -98,7 +98,7 @@ To brush up on your R programming skills, there are a variety of free resources 
 You may work and submit your assignments on any other statistical software including SPSS, STATA, Python or Julia. However, as R is becoming the lingua franca of data science in many academic circles, this is going to be the default technology used in this course. 
 
 
-```{r, fig.width=4}
+```{r penguins, fig.width=4}
 
 # include_graphics("images/course-structure.jpg")
 include_graphics("images/index-penguins.jpg")
