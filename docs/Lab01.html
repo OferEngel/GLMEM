@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>GLME: Lab 1</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Generalized Linear Mixed Effects</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-flask"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab01.html">Lab 01</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">GLME: Lab 1</h1>
+
+</div>
+
+
+<style>
+.column-left{
+  float: left;
+  width: 60%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 40%;
+  text-align: right;
+}
+.column-full{
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+</style>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>knitr<span class="sc">::</span>opts_chunk<span class="sc">$</span><span class="fu">set</span>(<span class="at">echo =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(knitr)</span></code></pre></div>
+<div class="column-right">
+<p><img src="images/under-construction.png" width="150" /></p>
+</div>
+<p>All datafiles can be found in the shared folder under <code>datasets</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified.</p>
+<ol style="list-style-type: decimal">
+<li>This exercise practices the use and interpretation of re-centering explanatory variables and the effect of co-linear explanatory variables.</li>
+</ol>
+<p>In the data file <code>practical1_cf.sav</code> you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength pemax (maximal static expiratory pressure, a measure of malnutrition, in cm H2O). We focus on explanatory variable height to predict <code>pemax</code> first.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explore the data and make a scatterplot of pemax and height. Regress pemax on height and write down the regression equation. Interpret the two regression coefficients. Use the software to calculate confidence intervals for the coefficients.</p></li>
+<li><p>Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model.</p></li>
+</ol>
+<p>Hint for SPSS: use transform <span class="math inline">\(\rightarrow\)</span> compute.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Based on this model, what is the confidence interval for predicted mean pemax for someone with a height of 150 cm?</p></li>
+<li><p>Add weight to the model. How does the coefficient of height change and why? Did the model improve? Which model would you prefer for predicting <code>pemax</code>?</p></li>
+<li><p>Check the assumptions of the regression analysis of your final model.</p></li>
+</ol>
+<p>2 This exercise shows how to incorporate and interpret categorical explanatory variables in a linear regression analysis and practices model building techniques.</p>
+<p>The data file <code>practical1_lowbw.sav</code> contains data from 189 baby’s (birth weight, outcome) and their mothers (explanatory variables age, smoking status (0 = non-smoker, 1 = smoker), socioeconomic status (SES, see below)). a. Test if mothers who smoke during pregnancy have on average children with the same birth weight as mothers who do not smoke during pregnancy. b. Test if age of the mother has an effect on their children’s birth weight.</p>
+<p>The categorical variable socioeconomic status (ses) is coded with values 1 (low SES), 2 (middle SES) and 3 (high SES). As these values are chosen arbitrarily, the variable cannot be used in a linear regression model in this form. We therefor need to create dichotomous dummy variables which represent this variable. For a categorical variable with three categories, we need two dummy variables (d1, d2):</p>
+<p>INSERT TABLE HERE</p>
+<p>This way, the low SES group is the reference group (the group for which d1=d2=0). Those in the middle SES category have d1=1 and d2=0, those in the high SES category d1=0 and d2=1. The dummy variables belong together: they contain all information previously held by ses and should be treated as one in the analysis to maintain the correct interpretation.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Create dummy variables d1 (middle SES) and d2 (high SES) as described above and perform the linear regression for birth weight on ses using d1 and d2. Interpret the results. Hint for SPSS: us transform &gt; compute, target variable: d1 , Numeric expression: Group = 2 And … // target variable: d2 // Numeric expression: Group = 3, or use transform &gt; recode.</p></li>
+<li><p>Create the best model to predict birth weight using the three possible explanatory variables and check model assumptions. Write down the regression equation.</p></li>
+<li><p>Based on this model, what is the predicted birth weight for a baby with a smoking, high SES mother of age 35? Figure out how to obtain predictive values for birth weight for all babies represented in the data file.</p></li>
+</ol>
+<p>3 This exercise practices the use and interpretation of an interaction effect in a linear regression model. The data file practical1_hyper1.sav contains data on a study on hypertension among the elderly performed in 1995. We focus on predicting systolic blood pressure (<code>sbp95</code>) using variables age and gender (where gender=1 denotes a female, otherwise: not female).</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Make a plot and perform the analysis to answer the question: is systolic blood pressure related to age, ignoring the effect of gender?</p></li>
+<li><p>Make a plot and perform the analysis to answer the question: is systolic blood pressure related to gender, ignoring the effect of age?</p></li>
+<li><p>Perform a multiple linear regression using both age and gender and interpret the results.</p></li>
+<li><p>Make a scatter plot of <code>sbp95</code> and <code>age93</code>. Use colour coding to distinguish men and women and plot regression lines for each subgroup. Does the effect of age on blood pressure seem to differ for men and women?</p></li>
+</ol>
+<p>To test if the difference in slope between the two groups is significantly different from 0, we introduce and test the interaction effect between variables age and gender. For this, we create a new variable <code>ageg</code> which is defined as <span class="math inline">\(X_{age}\cdot X\cdot{gender}\)</span> and test its significance in a multiple linear regression analysis containing both this variable and the two main effects (age and gender).</p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Create this variable <code>ageg</code> and perform a linear regression for systolic blood pressure on age, gender and the interaction variable. Write down the regression equation. What is the increase in sbp per year for men? What is it for women? Determine the 95%-for confidence interval for the difference in slope. Is this difference significantly different from 0?</li>
+</ol>
+<ol start="4" style="list-style-type: decimal">
+<li>This exercise recreates the logistic regression model for the heart disease study from today’s lecture. In the data file <code>practical1_chd.sav</code>, you find the dichotomous outcome variable for the occurrence of heart disease (chd, 0 = no, 1 = yes) and explanatory variables denoting the number of daily smoked cigarettes (cigs) and height in inches.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li><p>Rebuild the logistic regression model as shown in today’s lecture. Based on this model, what is the estimated effect (odds ratio) of height on chd, for fixed smoking behaviour? Is this effect significantly different from 0?</p></li>
+<li><p>Based on this model, what is the estimated effect of smoking a pack a day (=20 cigarettes) on the risk of chd compared to a non-smoker?</p></li>
+</ol>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
