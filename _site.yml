@@ -1,19 +1,19 @@
-name: "Generalized Linear and Mixed Effects Models"
+name: "Generalized Linear Mixed Effects"
 creative_commons: CC BY-NC
 exclude: ["*.Rmd", "*.csv", "*.xlsx", "./backup/*"]
 output_dir: "docs"
 navbar:
-  title: "Generalized Linear and Mixed Effects Models"
+  title: "Generalized Linear Mixed Effects"
   left:
     - text: "Overview"
       icon: fa-home
       href: index.html
-    - text: "Syllabus"
-      icon: fa-book-open
-      href: Syllabus-v6_2021.html
-    - text: "Classes"
-      menu:
-        - text: "TBD"
+  # - text: "Syllabus"
+  #   icon: fa-book-open
+  #   href: Syllabus-v6_2021.html
+    - text: "Labs"
+        menu:
+          - text: "TBD"
       # - text: "1 - Review"
       #   href: Class_1.html
       # - text: "2 - Framework for Explanation"
