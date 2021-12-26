@@ -8,12 +8,13 @@ navbar:
     - text: "Overview"
       icon: fa-home
       href: index.html
-  # - text: "Syllabus"
-  #   icon: fa-book-open
-  #   href: Syllabus-v6_2021.html
     - text: "Labs"
-        menu:
-          - text: "TBD"
+      icon: fa-flask
+      menu: 
+        - text: "Lab 01"
+          href: Lab01.html
+      #   - text: "TBD"
+      #     href: index.html
       # - text: "1 - Review"
       #   href: Class_1.html
       # - text: "2 - Framework for Explanation"
@@ -41,13 +42,13 @@ navbar:
     # - text: "Project"
     #   icon: fa-book-open
     #   href: Project.html
-    - text: "Links"
-      icon: fa-book-open
-      href: Links.html
+    # - text: "Links"
+    #   icon: fa-book-open
+    #   href: Links.html
 
 
 output:
   html_document:
     theme: flatly
-    css: style.css
+    # css: style.css
     highlight: tango
