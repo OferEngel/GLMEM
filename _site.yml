@@ -8,11 +8,11 @@ navbar:
     - text: "Overview"
       icon: fa-home
       href: index.html
-    - text: "Labs"
-      icon: fa-flask
-      menu: 
-        - text: "Lab 01"
-          href: Lab01.html
+    # - text: "Labs"
+    #   icon: fa-flask
+    #   menu:
+    #     - text: "TBD"
+    #       href: Lab01.html
 output:
   html_document:
     theme: flatly
