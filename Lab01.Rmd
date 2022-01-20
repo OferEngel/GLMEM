@@ -37,11 +37,11 @@ include_graphics("images/under-construction.png")
 ```
 
 
-All datafiles can be found in the shared folder under `datasets`. For testing, use $\alpha=0.05$ unless otherwise specified. 
+All datafiles can be found in the shared [folder under](https://bit.ly/3puop3I) `datasets`. For testing, use $\alpha=0.05$ unless otherwise specified. 
 
 1. This exercise practices the use and interpretation of re-centering explanatory variables and the effect of co-linear explanatory variables. 
 In the data file `practical1_cf.sav` you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength `pemax` (maximal static expiratory pressure, a measure of malnutrition, in cmH~2~O). We focus on explanatory variable height to predict `pemax` first. 
-  a.	Explore the data and make a scatterplot of pemax and height. Regress pemax on height and write down the regression equation. Interpret the two regression coefficients. Use the software to calculate confidence intervals for the coefficients. 
+    a.	Explore the data and make a scatterplot of pemax and height. Regress pemax on height and write down the regression equation. Interpret the two regression coefficients. Use the software to calculate confidence intervals for the coefficients. 
 
   b.	Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model. 
 Hint for SPSS: use transform $\rightarrow$ compute.

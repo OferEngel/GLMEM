@@ -79,7 +79,7 @@ include_graphics("images/Perusall.jpg")
 ### Grading 
 
 * *Partial course option:* Attendance and participation will reward you with a certificate for 1.5 ECT’s
-* *Full course option:* an additional 0.5 ECT is added for submitting solutions to exercises (You may submit assignments using either SPSS or R)
+* *Full course option:* an additional 0.5 ECT is added for lab reports with solutions to exercises (You may submit assignments using either SPSS or R). To pass, your lab reports must demonstrate problem solving skills based on the content of the course, and consist of full, final and complete solutions to the problems.
 
 
 ### Resources

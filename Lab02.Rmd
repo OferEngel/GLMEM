@@ -1,0 +1,165 @@
+---
+title: "GLME: Lab 2"
+#author: "Ofer Engel"
+output: html_document
+---
+
+<style>
+.column-left{
+  float: left;
+  width: 60%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 40%;
+  text-align: right;
+}
+.column-full{
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+.RIcon {
+  background-image: url("images/Rlogo.svg");
+}
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
+.center {
+  text-align: center;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(include = FALSE)
+
+
+library(knitr)
+library(tidyverse)
+library(lme4)
+library(foreign)
+library(modelsummary)
+library(janitor)
+
+```
+
+
+```{r, fig.width=4}
+
+include_graphics("images/under-construction.png")
+
+```
+
+All datafiles and Answers to exercises for either `SPSS` or `R` can be found in Nestor under `Content`. For testing, use $\alpha=0.05$ unless otherwise specified. Datsets can be found under our [shared drive](https://bit.ly/3puop3I)
+
+# Exercise 1
+
+This exercise examines the differences between using the linear regression model versus the generalized linear regression model where the distribution of the response variable is considered normal. You will find the data in the file `practical2_lowbwt.sav`. 
+
+Perform a linear regression of the variable `BWT` (birth weight) on the explanatory variables `SMOKE` and `LWT` (weight of the mother during last menstrual period). 
+
+
+
+::: {#hello .RUsers }
+For **R Users**!
+
+use `lm(...)` for the model and `confint()` for the confidence intervals. If you have two models, `m1` and `m2`, you may compare them by using `modelsummary(list(m1, m2), stars=TRUE)`
+:::
+
+
+Compare these results with the results of an analysis in GzLM (SPSS users) or glm(...) (R users) in which you define the distribution of the response variable as normal (let the software create confidence intervals for the regression coefficients). Do the results agree? Where do they differ and why?
+
+
+
+```{r}
+
+d <- read.spss("data/practical2_lowbwt.sav", to.data.frame = TRUE)
+m1 <- lm(BWT ~ SMOKE + LWT, data=d)
+m2 <- glm(BWT ~ SMOKE + LWT, data=d)
+# confint(m1)
+# confint(m2)
+modelsummary(list(m1, m2), stars=TRUE)
+
+
+```
+
+
+# Exercise 2
+
+This exercise examines the differences between the logistic regression model/generalized linear model with logit link function and the generalized linear model with probit link function. 
+Open the file `practical2_lowbwt.sav`.
+
+a.	Make a cross tabulation  of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well.
+
+::: {#crosstab .SPSS }
+For **SPSS Users**
+
+`Analyze > Descriptive statistics > Crosstabs`
+
+
+:::
+
+::: {#crosstab .RUsers }
+
+
+For **R Users**
+
+You could use either `xtable` for this, or use the functions from the `janitor` library, namely `tabyl`, `adorn_percentages` and `adorn_pct_formatting`. 
+
+
+:::
+
+```{r}
+library(purrr)
+
+d %>% tabyl(SMOKE, LOW) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_title () 
+
+
+xtabs(data=d, formula = ~ SMOKE+LOW)
+
+```
+
+
+
+
+b.	Perform a logistic regression of the variable LOW on the explanatory variable SMOKE by building a Generalized linear model, using the logit link function. Take LOW as the dependent and SMOKE as predictor. What is the interpretation of the coefficient of SMOKE?
+
+Additional exercise for SPSS-users: build the same model using of the binary logistic regression module first, then the GzLM module-model (treat SMOKE as factor there) and compare the output of the two.
+
+c.	Build a Generalized linear model, but now use the probit link function. Take LOW as the dependent and SMOKE as predictor (factor). What is the interpretation of the coefficient of SMOKE? Calculate the probabilities for having a child with low birth weight for smoking and non-smoking mothers. Do the results agree with 2.2b? (find a table of the standard normal distribution online, or use pnorm/qnorm (R users)).
+
+
+# Exercise 3
+
+
+3 This exercise further explores the Dupuytren data we already encountered in the lecture building and comparing various models, using techniques from today’s lecture. 
+Open the file practical2_dupuytren.sav. 
+a.	Is the probability of having Dupuytren related to Age? Fit a Binomial model with logistic link function without and with correcting for overdispersion using Pearson’s Chi-square value and compare your results with the results shown in today’s lecture.
+b.	Give the 95% CI for the probability to have Dupuytren at the age of 78, according to the Binomial model. Compare the estimate to the graph on slide 41 (p116).
+Hint for SPSS users: add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the analysis again and let SPSS save the predicted value of the mean response and its lower and upper bounds. 
+c.	Fit a Binomial model, now use with Deviance scaling to correct for overdispersion. Compare the adjusted Log Likelihood to the adjusted Log Likelihood we found in the lecture.
+d.	Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?
+
+
+
+

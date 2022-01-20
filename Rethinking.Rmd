@@ -1,0 +1,660 @@
+---
+title: "Rithinking"
+author: "ofer engel"
+date: "07/01/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(eval = FALSE)
+
+# Questions and homework etc... 
+# Here: https://github.com/rmcelreath/statrethinking_winter2019
+# 
+
+
+library(tidyverse)
+library(rstanarm)
+library(arm)
+library(bayesplot)
+library(janitor)
+library(metR)
+library(rethinking)
+library(modelsummary)
+precis <- function(x, ...) return(rethinking::precis(x, hist=FALSE, ...))
+
+```
+
+#Chapter 4
+
+```{r cherries, include=FALSE, eval=FALSE}
+
+data("cherry_blossoms")
+d <- cherry_blossoms |> na.omit()
+precis(d) 
+
+
+ggplot(d, aes(x=year, y=doy)) + geom_point() + geom_smooth()
+
+knots.n <- 15
+knot.list <- quantile(d$year, seq(0,1, length.out=knots.n))
+
+library(splines) 
+B <-bs(d$year,
+       knots=knot.list[-c(1, knots.n)] ,
+       degree=3 ,intercept=TRUE)
+
+qplot(d$year, B[,5])
+data.frame(B) |> pivot_longer(cols=c(1:17)) |> 
+  cbind(year=rep(d$year, rep(17, length(d$year))))  -> Bs
+
+str(Bs)
+data.frame(bf=Bs$name, value=Bs$value, year=Bs$year) |> 
+  ggplot() + geom_line(aes(x=year, y=value, color=bf))
+
+
+m4.7 <- quap(
+  alist(
+    D  ~ dnorm(mu, sigma), 
+    mu ~ a + B %*% w, 
+    a ~ dnorm(100,10), 
+    w ~ dnorm(0,10), 
+    sigma ~ exp(1)
+), data = list(D=d$doy, B=B),
+start=list( w=rep(0,ncol(B)))) 
+
+rethinking::precis(m4.7, depth=2)
+
+
+post <-extract.samples(m4.7)
+w <-apply(post$w,2,mean)
+plot( NULL,xlim=range(d$year),ylim=c(-6,6),
+      xlab="year" ,ylab="basis*weight")
+for (i in 1:ncol(B)) lines(d$year, w[i]*B[,i], col=i)
+
+
+
+mu  <-link(m4.7)$mu
+mu_PI <-apply(mu,2, PI, 0.99)
+plot( d$year, d$doy, col=col.alpha(rangi2,0.3), pch=16)
+shade( mu_PI, d$year, col=col.alpha("black",0.5))
+```
+
+## 4E3. Model 
+yi ∼ Normal(μ, σ)
+μ ∼ Normal(0, 10)
+σ ∼ Exponential(1)
+
+$ Pr(\mu, \sigma | Y) = \frac{Pr(Y|\mu, \sigma  ) Pr(\mu)Pr(\sigma)}{\int{Pr(Y|\mu, \sigma)Pr(\mu)Pr(\sigma)\,d\mu\,d\sigma}}$
+
+```{r 4M1}
+sigma <- rexp(1e4)
+mu <- rnorm(1e4, 0, 10)
+y  <- rnorm(1e4, mu, sigma)
+qplot(y, geom="histogram")
+
+
+# 4m2
+
+# m.4m2 <- quap(
+#   alist(
+#     y  ~ dnorm(mu,sigma),
+#     mu ~ dnorm(0.10), 
+#     sigma ~ dexp(1)
+#     
+#   ), data=d
+# )
+
+
+
+
+```
+
+
+## 4M4. Model 
+yi ~ Normal(μ, σ)
+μ ~ a + b * year
+a ~ Normal(0, 50)
+b ~ Normal(0,10)
+σ ~ Exponential(1)
+
+
+
+## 4H1. Model 
+
+```{r 4H1}
+data(Howell1)
+d <-Howell1
+precis(d)
+
+d2 <- d |> filter(age>18) |> 
+    mutate(std.weight = (weight-mean(weight))/sd(weight))
+
+qplot(d2$weight, geom="histogram", binwidth=1)
+qplot(d2$weight, d2$height)
+
+H.11 <- quap(
+  alist(
+    height ~ dnorm(mu, sigma), 
+    mu  ~ b0 + b1*std.weight, 
+    b0   ~ dnorm(178, 20), 
+    b1   ~ dlnorm(0, 1),
+    sigma ~ dunif(0,50)
+  ),   data=d2)
+
+newdata <- data.frame(weight=c(46.95, 43.72, 64.78, 32.59, 54.63)) |> 
+  mutate(std.weight = (weight-mean(d2$weight))/sd(d2$weight))
+
+preds <-  link(H.11, newdata |> dplyr::select(std.weight))
+data.frame(e.height=apply(preds, 2, mean), 
+           PI1=apply(preds,2,PI)[1,], PI2=apply(preds,2,PI)[2,] )
+
+HPDI(preds[,1], prob=.9)
+
+```
+
+
+
+## 4H.2
+
+```{r}
+
+d3 <- d |> filter(age<18) |> 
+    mutate(std.weight = (weight-mean(weight))/sd(weight))
+
+M4H.2 <- quap(
+  alist(
+    height <- dnorm(mu, sigma), 
+    mu ~ b0+b1*weight, 
+    b0 ~ dnorm(178, 25), 
+    b1 ~ dnorm(2, 1), 
+    sigma ~ dexp(1) 
+  ), data=d3)
+
+post <-extract.samples(M4H.2,n=1e4)
+
+
+qplot(x=weight, y=height, data=d3) + 
+  geom_abline(slope=mean(post$b1), intercept=mean(post$b0))
+
+weight.seq <- data.frame(weight=seq(min(d3$weight), max(d3$weight), length.out=30))
+
+sim <- sim(M4H.2, weight.seq)
+
+mu <- link(M4H.2, weight.seq)
+qplot(x=weight.seq$weight, y=apply(mu,2,mean), geom="line", color=I("red")) + 
+  geom_point(data=d3, aes(weight, height)) + geom_ribbon(aes(x=weight.seq$weight, ymin=apply(mu,2,PI, prob=.99)[1,], ymax=apply(mu,2,PI, prob=.99)[2,]), alpha=.3, fill="red") + 
+  geom_ribbon(aes(x=weight.seq$weight, ymin=apply(sim,2,PI, prob=.99)[1,], ymax=apply(sim,2,PI, prob=.99)[2,]), alpha=.4, fill="pink") 
+
+```
+For every increase of 10 units in weight, we expect an average increase of 27 units in height. 
+
+
+## 4H.3
+
+
+
+```{r 4H.3}
+
+d4 <- d |>  mutate(std.weight = (weight-mean(weight))/sd(weight), 
+           log.weight=log(weight))
+
+M4H.3 <- quap(
+  alist(
+    height <- dnorm(mu, sigma), 
+    mu ~ b0+b1*log.weight, 
+    b0 ~ dnorm(178, 25), 
+    b1 ~ dlnorm(0, 1), 
+    sigma ~ dexp(1) 
+  ), data=d4)
+
+precis(M4H.3)
+post <-extract.samples(M4H.3,n=1e4)
+
+
+qplot(x=log.weight, y=height, data=d4) + 
+  geom_abline(slope=mean(post$b1), intercept=mean(post$b0))
+
+weight.seq <- data.frame(log.weight=seq(min(d4$log.weight), 
+                                    max(d4$log.weight), length.out=30)) |> 
+  mutate(weight=round(exp(log.weight), digits = 1))
+
+sim <- sim(M4H.3, weight.seq)
+
+mu <- link(M4H.3, weight.seq)
+
+
+qplot(x=weight.seq$log.weight, y=apply(mu,2,mean), geom="line", color=I("black"), size=I(.1)) + 
+  geom_point(data=d3, aes(log.weight, height)) + geom_ribbon(aes(x=weight.seq$log.weight, ymin=apply(mu,2,PI, prob=.99)[1,], ymax=apply(mu,2,PI, prob=.99)[2,]), alpha=.3, fill="red") + 
+  geom_ribbon(aes(x=weight.seq$log.weight, ymin=apply(sim,2,PI, prob=.99)[1,], ymax=apply(sim,2,PI, prob=.99)[2,]), alpha=.4, fill="pink") + 
+  scale_x_continuous(name="weight (kg)", breaks=weight.seq$log.weight[seq(1,30,by=3)], 
+                     labels = weight.seq$weight[seq(1,30,by=3)])
+
+```
+
+So when we compare someone whose height of say someone 7.4kg (mu=70.84cm) with someone who is 7.4kg*exp(1) = 20.11, (mu=118.81cm) we expect the height to increase by b1=46.91, in fact 118.8-70.84=47.96, which is pretty accurate. 
+In other words, adding 1 to the log(x) is like multipying x by e, and the result is that the dependent variable increases by b1=46.91. 
+
+if the dependent variable was log(y), we would say that an increase in one in the independent variable would be like multiplying the y by exp(b1)
+
+
+
+```{r}
+
+weight.seq <- data.frame(weight=seq(min(d4$weight), max(d4$weight), length.out=30)) |> mutate(log.weight=log(weight))
+
+preds <- link(M4H.3, weight.seq)
+weight.seq$height.hat <- apply(preds, 2, mean)
+weight.seq$lower.height <- apply(preds, 2, PI,.99)[1,]
+weight.seq$higher.height <- apply(preds, 2, PI,.99)[2,]
+
+sim <- sim(M4H.3, weight.seq)
+weight.seq$lower.sim  <- apply(sim, 2, PI,.99)[1,]
+weight.seq$higher.sim <- apply(sim, 2, PI,.99)[2,]
+
+
+
+ggplot(d4) + 
+  geom_point(aes(x=weight, y=height), alpha=.5) + 
+  geom_line(data=weight.seq, aes(x=weight,y=height.hat), 
+            color="red", size=.1) + 
+  geom_ribbon(data=weight.seq, alpha=.5, fill="red", 
+              aes(x=weight, 
+                  ymin=lower.height, ymax=higher.height))+ 
+  geom_ribbon(data=weight.seq, alpha=.4, fill="pink", 
+              aes(x=weight, 
+                  ymin=lower.sim, ymax=higher.sim))
+
+```
+
+
+
+# 4h.5 
+
+Return to data(cherry_blossoms) and model the association between blossom date(doy) and March temperature(temp). Note that there are many missing values in both variables. You may consider a linear model, a polynomial, or aspline on temperature. How well does temperature trend predict the blossom trend?
+
+
+```{r}
+data("cherry_blossoms")
+d <- cherry_blossoms
+d1 <- d[,2:3] %>% na.omit()
+d1$temp_c <- (d1$temp - mean(d1$temp))/sd(d1$temp)
+
+qplot(x=temp_c, y=doy, data=d1) + 
+  geom_smooth()
+
+mdl <- quap(
+  alist(
+    doy ~ dnorm(mu, sigma),
+    mu  ~ b0 + b1*temp_c + b2*temp_c^2, 
+    b0  ~ dnorm(mean=104,20),
+    b1  ~ dnorm(mean=0, sd=5), 
+    b2  ~ dnorm(mean=0, sd=1),
+    sigma ~ dexp(1)
+  ), data=d1)
+
+precis(mdl)
+
+```
+
+
+# Chapter 5
+
+
+```{r}
+data(milk)
+d <- milk
+
+d1 <- d %>% mutate(K=standardize(kcal.per.g), 
+                   N=standardize(neocortex.perc), 
+                   M=standardize(log(mass)))
+
+
+qplot(N, K, data=d1)  +
+  geom_smooth(formula=y~x)
+
+m5.5.draft <- quap(
+  alist(
+    K  ~ dnorm(mu, sigma), 
+    mu ~ b0 + bN*N,
+    b0 ~ dnorm(0,1), 
+    bN ~ dnorm(0,1), 
+    sigma ~ dexp(1)
+    
+  ), d1[,9:11] %>% na.omit())
+
+precis(m5.5.draft)
+
+prior.draft <- extract.prior(m5.5.draft)
+mu.draft <- link(m5.5.draft, post=prior.draft, data=list(N=c(-2,0,2)))
+
+
+plot( NULL,xlim=c(-2,2),ylim=c(-2,2))
+for (i in 1:50)
+  lines(c(-2,0,2),mu.draft[i,],col=col.alpha("black",0.3))
+
+
+m5.5 <- quap(
+  alist(
+    K  ~ dnorm(mu, sigma), 
+    mu ~ b0 + bN*N,
+    b0 ~ dnorm(0,.2), 
+    bN ~ dnorm(0,0.5), 
+    sigma ~ dexp(1)
+    
+  ), d1[,9:11] %>% na.omit())
+
+precis(m5.5)
+
+
+prior <- extract.prior(m5.5)
+mu <- link(m5.5, post=prior, data=list(N=c(-2,0,2)))
+
+
+plot( NULL,xlim=c(-2,2),ylim=c(-2,2))
+for (i in 1:50)
+  lines(c(-2,0,2),mu[i,],col=col.alpha("black",0.3))
+
+
+data.frame(b0=prior.draft$b0,
+           bN=prior.draft$bN, 
+           type="draft") %>% 
+  add_row(
+           b0=prior$b0,
+           bN=prior$bN,
+           type="new"
+           ) %>%  qplot(x=bN, y=b0, data=., color=type, alpha=I(.3))
+
+data.frame(b0=prior.draft$b0,
+           bN=prior.draft$bN, 
+           type="draft") %>% 
+  add_row(
+           b0=prior$b0,
+           bN=prior$bN,
+           type="new"
+           ) %>% ggplot() + 
+  geom_histogram(aes(x=bN, fill=type), position="dodge", binwidth=.1)
+
+
+precis(m5.5)
+
+d1[,9:11] %>% na.omit() -> d2
+
+xseq <- seq(min(d2$N), max(d2$N), length.out=30)
+mu <- link(m5.5, data=list(N=xseq))
+
+ggplot() + geom_point(data=d2, aes(x=N, y=K)) + 
+  geom_line(aes(x=xseq, y=apply(mu,2,mean))) + 
+  geom_ribbon(aes(x=xseq, ymin=apply(mu,2,PI)[1,], ymax=apply(mu,2,PI)[2,]), alpha=.3)
+
+```
+
+Now let's do both predictors together let's see what happens!
+
+
+
+
+```{r}
+
+m5.7 <- quap(
+  alist(
+    K  ~ dnorm(mu, sigma), 
+    mu ~ b0 + bN*N + bM*M,
+    b0 ~ dnorm(0,.2), 
+    bN ~ dnorm(0,0.5),
+    bM ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+    
+  ), d1[,9:11] %>% na.omit())
+
+precis(m5.7)
+
+
+m5.7i <- quap(
+  alist(
+    K  ~ dnorm(mu, sigma), 
+    mu ~ b0 + bN*N + bM*M + bMN*M*N,
+    b0 ~ dnorm(0,.2), 
+    bN ~ dnorm(0,0.5),
+    bM ~ dnorm(0,0.5),
+    bMN ~ dnorm(0,0.5),
+    sigma ~ dexp(1)
+    
+  ), d1[,9:11] %>% na.omit())
+
+precis(m5.7i)
+
+
+```
+
+Ok now things with the heights
+
+```{r}
+data("Howell1")
+d <- Howell1 %>% mutate(male=male+1)
+
+mdl <- quap(
+  alist(
+    height~dnorm(mu, sigma),
+    mu <- a[male], 
+    a[male] <- dnorm(178,20),
+    sigma ~ dunif(0, 50)      
+  ), data=d)
+
+precis(mdl, depth=2)
+
+
+
+data("milk")
+d <- milk %>% mutate(K = standardize(kcal.per.g), 
+                     F = standardize(perc.fat), 
+                     L = standardize(perc.lactose))
+
+
+
+mdl.KF <- quap(
+  alist(
+    K ~ dnorm(mu, sigma),
+    mu <- b0+bF*F, 
+    b0 ~ dnorm(0,.3),
+    bF ~ dnorm(0,0.5),
+    sigma ~ dunif(0, 50)      
+  ), data=d)
+
+precis(mdl.KF, depth=2)
+
+
+mdl.KL <- quap(
+  alist(
+    K ~ dnorm(mu, sigma),
+    mu <- b0+bL*L, 
+    b0 ~ dnorm(0,.3),
+    bL ~ dnorm(0,0.5),
+    sigma ~ dunif(0, 50)      
+  ), data=d)
+
+precis(mdl.KF, depth=2)
+precis(mdl.KL, depth=2)
+
+
+
+```
+
+
+
+# Chapter 7
+
+```{r}
+
+
+set.seed(71) 
+
+# number of plants
+N <-100
+
+# simulate initial heights
+h0 <-rnorm(N,10,2)
+
+# assign treatments and simulate fungus and growth
+treatment <-rep(0:1,each=N/2)
+fungus <-rbinom(N,size=1,prob=0.5-treatment*0.4)
+h1 <-h0+rnorm(N,5-3*fungus)
+
+# compose a clean data frame
+d <-data.frame(h0=h0,h1=h1,treatment=treatment,fungus=fungus)
+precis(d)
+
+
+sim_p <-rlnorm(1e4,0,0.25)
+
+precis( data.frame(sim_p))
+
+mdl6.6 <- quap(
+  alist(
+    h1 ~ dnorm(mu, sigma), 
+    mu <- h0*p, 
+    p ~ dlnorm(0, .25), 
+    sigma ~ dexp(1)
+  ), data=d)
+
+precis(mdl6.1, depth=2)
+
+
+mdl6.7 <- quap(
+  alist(
+    h1 ~ dnorm(mu, sigma), 
+    mu <- h0*p, 
+    p   <-  b0 + bt*treatment + bf*fungus,
+    b0  ~   dlnorm(0, .25), 
+    bt  ~   dnorm(0, .5),
+    bf  ~   dnorm(0, 0.5),
+    sigma ~ dexp(1)
+  ), data=d)
+
+precis(mdl6.7, depth=2)
+
+
+mdl6.8 <- quap(
+  alist(
+    h1 ~ dnorm(mu, sigma), 
+    mu <- h0*p, 
+    p   <-  b0 + bt*treatment ,
+    b0  ~   dlnorm(0, .25), 
+    bt  ~   dnorm(0, .5),
+    sigma ~ dexp(1)
+  ), data=d)
+
+precis(mdl6.8, depth=2)
+
+mdl6.9 <- quap(
+  alist(
+    h1 ~ dnorm(mu, sigma), 
+    mu <- h0*p, 
+    p   <-  b0 + bf*fungus ,
+    b0  ~   dlnorm(0, .25), 
+    bf  ~   dnorm(0, .5),
+    sigma ~ dexp(1)
+  ), data=d)
+
+precis(mdl6.9, depth=2)
+
+
+set.seed(77) 
+
+
+plot(compare( mdl6.6,mdl6.7,mdl6.8, mdl6.9))
+
+plot(compare( mdl6.6, mdl6.8))
+
+```
+
+treatment -> fungus -> h1 <- h0
+
+
+# Chapter 9 MCMC
+
+```{r}
+data(rugged)
+d <- rugged
+d1 <- d %>% drop_na(rgdppc_2000)  %>% mutate(
+  loggdp=log(rgdppc_2000), stdloggdp=loggdp/mean(loggdp),
+  std.rugged=rugged/max(rugged), 
+  cid = 2-cont_africa) %>% 
+  dplyr::select(stdloggdp, std.rugged, cid) 
+
+d2 <- d %>% drop_na(rgdppc_2000)  %>% mutate(
+  stdloggdp=log(rgdppc_2000)/mean(log(rgdppc_2000)),
+  std.rugged=rugged/max(rugged), 
+  cid = 2-cont_africa) %>% 
+  dplyr::select(starts_with("stdlo"), std.rugged, cid)
+
+summary(d2)
+
+m8.1 <-quap(
+  alist(
+    stdloggdp ~dnorm(mu,sigma),
+    mu <-a[cid]+b[cid]*(std.rugged-0.215),
+    a[cid] ~dnorm(1,0.1),
+    b[cid] ~dnorm(0,0.3),
+    sigma ~dexp(1)
+) ,data=d2)
+precis( m8.1,depth=2)
+
+
+
+# # summary(dd)
+# # 
+# dd <- rugged
+# dd$log_gdp <-log(d$rgdppc_2000)
+# dd <-d[complete.cases(d$rgdppc_2000),]
+# dd$log_gdp_std <-dd$log_gdp/mean(dd$log_gdp)
+# dd$rugged_std <-dd$rugged/max(dd$rugged)
+# dd$cid <-ifelse(dd$cont_africa==1,1,2)
+# dd <- dd %>% dplyr::select(log_gdp_std,rugged_std,cid)
+# 
+# 
+# 
+# m8.1 <-quap(
+#   alist(
+#     log_gdp_std ~dnorm(mu,sigma),
+#     mu <-a[cid]+b[cid]*(rugged_std-0.215),
+#     a[cid] ~dnorm(1,0.1),
+#     b[cid] ~dnorm(0,0.3),
+#     sigma ~dexp(1)
+# ) ,data=dd)
+# precis( m8.1,depth=2)
+# 
+# plot(PSIS(m8.1,pointwise=TRUE)$k)
+
+
+dat_slim <- list(
+  stdloggdp = d2$stdloggdp , 
+  stdrugged = d2$std.rugged,
+  cid = d2$cid)
+
+
+m9.1 <- ulam(
+  alist(
+    stdloggdp ~ dnorm(mu, sigma),
+    mu <- b0[cid] + b1[cid]*(stdrugged-0.2149601),
+    b0[cid] ~ dnorm(1, 0.2),
+    b1[cid] ~ dnorm(0, 0.3), 
+    sigma ~ dexp(1)
+  ), data=dat_slim, chains=1)
+
+
+precis( m9.1,depth=2)
+show(m9.1)
+
+```
+
+
+
+
+
+
+
+
+

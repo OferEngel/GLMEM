@@ -11,7 +11,7 @@
 
 
 
-<title>Generalized Linear Mixed Effects</title>
+<title>GLME: Lab 2</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -30,6 +30,8 @@
        code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
        pre:not([class]) { background-color: white }</style>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
 <link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
 
@@ -250,7 +252,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Generalized Linear Mixed Effects</h1>
+<h1 class="title toc-ignore">GLME: Lab 2</h1>
 
 </div>
 
@@ -265,58 +267,71 @@ $(document).ready(function () {
   float: right;
   width: 40%;
   text-align: right;
-  padding-left: 10px;
 }
 .column-full{
   float: none;
   width: 100%;
   text-align: left;
 }
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+.RIcon {
+  background-image: url("images/Rlogo.svg");
+}
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
+.center {
+  text-align: center;
+}
+
 </style>
-<div class="column-left">
-<p>What is to be done when different groups in the population exhibit very different properties and relationships between properties? What errors might we make when we aggregate all the data together and analyse it as one? And how do we avoid these errors if we are not sure which groups are we to consider together and which should we consider apart?</p>
-<p>This is an applied course in how to extend the linear regression models in a way that would be more amenable to causal analysis.</p>
+<p>All datafiles and Answers to exercises for either <code>SPSS</code> or <code>R</code> can be found in Nestor under <code>Content</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified. Datsets can be found under our <a href="https://bit.ly/3puop3I">shared drive</a></p>
+<div id="exercise-1" class="section level1">
+<h1>Exercise 1</h1>
+<p>This exercise examines the differences between using the linear regression model versus the generalized linear regression model where the distribution of the response variable is considered normal. You will find the data in the file <code>practical2_lowbwt.sav</code>.</p>
+<p>Perform a linear regression of the variable <code>BWT</code> (birth weight) on the explanatory variables <code>SMOKE</code> and <code>LWT</code> (weight of the mother during last menstrual period).</p>
+<div id="hello" class="RUsers">
+<p>For <strong>R Users</strong>!</p>
+<p>use <code>lm(...)</code> for the model and <code>confint()</code> for the confidence intervals. If you have two models, <code>m1</code> and <code>m2</code>, you may compare them by using <code>modelsummary(list(m1, m2), stars=TRUE)</code></p>
 </div>
-<div class="column-right">
-<p><img src="images/course-structure.jpg" width="338" /></p>
+<p>Compare these results with the results of an analysis in GzLM (SPSS users) or glm(…) (R users) in which you define the distribution of the response variable as normal (let the software create confidence intervals for the regression coefficients). Do the results agree? Where do they differ and why?</p>
 </div>
-<div id="aim" class="section level3">
-<h3>Aim:</h3>
-<ul>
-<li>Explore (clustered) data and apply generalized linear and mixed effects models (multilevel models)</li>
-<li>Understand the theory of (generalized) linear mixed effects models for cross-sectional and longitudinal data, for numerical, dichotomous and count outcome variables</li>
-<li>Build, examine, interpret, expand and compare these models using GEE or (RE)ML estimation</li>
-<li>Perform these techniques using SPSS or R using practical examples(or any other statistical software packages, self-study)</li>
-</ul>
+<div id="exercise-2" class="section level1">
+<h1>Exercise 2</h1>
+<p>This exercise examines the differences between the logistic regression model/generalized linear model with logit link function and the generalized linear model with probit link function. Open the file <code>practical2_lowbwt.sav</code>.</p>
+<ol style="list-style-type: lower-alpha">
+<li>Make a cross tabulation of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well.</li>
+</ol>
+<div id="crosstab" class="SPSS">
+<p>For <strong>SPSS Users</strong></p>
+<p><code>Analyze &gt; Descriptive statistics &gt; Crosstabs</code></p>
 </div>
-<div id="method" class="section level3">
-<h3>Method</h3>
-<p>The course is designed to follow the flipped-classroom approach. Readings and videos of the lectures are available before the course begins. You will be expected to read the relevant chapters in the textbook, watch the videos, and comment on them in Perusall PRIOR to attending the course. During the course itself, you will work on quizzes and lab assignments, which you may then submit at the end of each day.</p>
-<div id="prepare" class="section level4 column-left">
-<h4>Prepare</h4>
-<p>To prepare for the course, please complete the assignments, all available on the Perusall platform. You can find the assignments in Nestor under <code>Assignments</code>. You then need to click on the title of the item: <code>CLICK ME to access Perusall</code>.</p>
-<p>Completing the assignment involves watching the video and reading the text before the assigned deadlines. Completing the assignments will contribute towards your attendance and participation in the course.</p>
+<div id="crosstab" class="RUsers">
+<p>For <strong>R Users</strong></p>
+<p>You could use either <code>xtable</code> for this, or use the functions from the <code>janitor</code> library, namely <code>tabyl</code>, <code>adorn_percentages</code> and <code>adorn_pct_formatting</code>.</p>
 </div>
-<div class="column-right">
-<p><img src="images/Perusall.jpg" width="483" /></p>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Perform a logistic regression of the variable LOW on the explanatory variable SMOKE by building a Generalized linear model, using the logit link function. Take LOW as the dependent and SMOKE as predictor. What is the interpretation of the coefficient of SMOKE?</li>
+</ol>
+<p>Additional exercise for SPSS-users: build the same model using of the binary logistic regression module first, then the GzLM module-model (treat SMOKE as factor there) and compare the output of the two.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Build a Generalized linear model, but now use the probit link function. Take LOW as the dependent and SMOKE as predictor (factor). What is the interpretation of the coefficient of SMOKE? Calculate the probabilities for having a child with low birth weight for smoking and non-smoking mothers. Do the results agree with 2.2b? (find a table of the standard normal distribution online, or use pnorm/qnorm (R users)).</li>
+</ol>
 </div>
-</div>
-<div id="grading" class="section level3">
-<h3>Grading</h3>
-<ul>
-<li><em>Partial course option:</em> Attendance and participation will reward you with a certificate for 1.5 ECT’s</li>
-<li><em>Full course option:</em> an additional 0.5 ECT is added for lab reports with solutions to exercises (You may submit assignments using either SPSS or R). To pass, your lab reports must demonstrate problem solving skills based on the content of the course, and consist of full, final and complete solutions to the problems.</li>
-</ul>
-</div>
-<div id="resources" class="section level3">
-<h3>Resources</h3>
-<p>Online (Nestor, Perusall, github): lectures, presentations, data-sets and exercises and background literature</p>
-<p>You will find the slides and the datasets in this <a href="https://bit.ly/3puop3I">shared driver</a>. You will need to first log into your rug.nl account in order to access the files.</p>
-<p>Further information can be found in the textbook (Chapters available through a link on <a href="https://nestor.rug.nl/webapps/blackboard/execute/modulepage/view?course_id=_401842_1&amp;cmp_tab_id=_987516_1">nestor</a>): Julian J. Faraway. Extending the linear model with R. Generalized Linear, Mixed Effects and Nonparametric Regression Models.</p>
-<p>… which was used as the framework for this course. Additional material (data, updates, errata) can be found in the following <a href="people.bath.ac.uk/jjf23/ELM">webpage.</a></p>
-<p>To brush up on your R programming skills, there are a variety of free resources you can use, such as the <a href="https://sicss.io/boot_camp/">SICSS bootcamp</a>, Harvard’s famous <a href="https://www.edx.org/course/data-science-r-basics">R Basics course</a>, or Stanford’s <a href="https://www.edx.org/course/r-programming-fundamentals">R Programming fundamentals</a>. If you speak German, <a href="https://shiny.lmes.uni-potsdam.de/startR/">this site</a> is quite nice.</p>
-<p>You may work and submit your assignments on any other statistical software including SPSS, STATA, Python or Julia. However, as R is becoming the lingua franca of data science in many academic circles, this is going to be the default technology used in this course.</p>
-<p><img src="images/index-penguins.jpg" width="568" /></p>
+<div id="exercise-3" class="section level1">
+<h1>Exercise 3</h1>
+<p>3 This exercise further explores the Dupuytren data we already encountered in the lecture building and comparing various models, using techniques from today’s lecture. Open the file practical2_dupuytren.sav. a. Is the probability of having Dupuytren related to Age? Fit a Binomial model with logistic link function without and with correcting for overdispersion using Pearson’s Chi-square value and compare your results with the results shown in today’s lecture. b. Give the 95% CI for the probability to have Dupuytren at the age of 78, according to the Binomial model. Compare the estimate to the graph on slide 41 (p116). Hint for SPSS users: add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the analysis again and let SPSS save the predicted value of the mean response and its lower and upper bounds. c. Fit a Binomial model, now use with Deviance scaling to correct for overdispersion. Compare the adjusted Log Likelihood to the adjusted Log Likelihood we found in the lecture. d. Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?</p>
 </div>
 
 
