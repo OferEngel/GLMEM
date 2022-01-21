@@ -145,3 +145,9 @@ DF <- as.data.frame(UCBAdmissions)
 DF
 ## Nice for taking margins ...
 xtabs( ~ Gender + Admit, DF)
+
+
+df <- data.frame(x1=rnorm(100), x2=rnorm(100)) %>% mutate(y=.3*x1+.7*x2+rnorm(100))
+mdl <- lm(y~., data=df) 
+summary(mdl)
+cor(predict(mdl), df$y)

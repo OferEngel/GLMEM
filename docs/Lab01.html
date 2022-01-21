@@ -272,17 +272,18 @@ $(document).ready(function () {
   text-align: left;
 }
 </style>
-<p><img src="images/under-construction.png" width="150" /></p>
-<p>All datafiles can be found in the shared folder under <code>datasets</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified.</p>
+<p>All datafiles can be found in the shared <a href="https://bit.ly/3puop3I">folder under</a> <code>datasets</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified.</p>
 <ol style="list-style-type: decimal">
-<li>This exercise practices the use and interpretation of re-centering explanatory variables and the effect of co-linear explanatory variables. In the data file <code>practical1_cf.sav</code> you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength <code>pemax</code> (maximal static expiratory pressure, a measure of malnutrition, in cmH<sub>2</sub>O). We focus on explanatory variable height to predict <code>pemax</code> first.</li>
-</ol>
+<li>This exercise practices the use and interpretation of re-centering explanatory variables and the effect of co-linear explanatory variables. In the data file <code>practical1_cf.sav</code> you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength <code>pemax</code> (maximal static expiratory pressure, a measure of malnutrition, in cmH<sub>2</sub>O). We focus on explanatory variable height to predict <code>pemax</code> first.
 <ol style="list-style-type: lower-alpha">
-<li><p>Explore the data and make a scatterplot of pemax and height. Regress pemax on height and write down the regression equation. Interpret the two regression coefficients. Use the software to calculate confidence intervals for the coefficients.</p></li>
-<li><p>Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model. Hint for SPSS: use transform <span class="math inline">\(\rightarrow\)</span> compute.</p></li>
-<li><p>Based on this model, what is the confidence interval for predicted mean <code>pemax</code> for someone with a height of 150 cm?</p></li>
-<li><p>Add weight to the model. How does the coefficient of height change and why? Did the model improve? Which model would you prefer for predicting <code>pemax</code>?</p></li>
-<li><p>Check the assumptions of the regression analysis of your final model.</p></li>
+<li>Explore the data and make a scatterplot of pemax and height. Regress pemax on height and write down the regression equation. Interpret the two regression coefficients. Use the software to calculate confidence intervals for the coefficients.</li>
+</ol></li>
+</ol>
+<ol start="2" style="list-style-type: lower-alpha">
+<li>Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model. Hint for SPSS: use transform <span class="math inline">\(\rightarrow\)</span> compute.</li>
+<li>Based on this model, what is the confidence interval for predicted mean <code>pemax</code> for someone with a height of 150 cm?</li>
+<li>Add weight to the model. How does the coefficient of height change and why? Did the model improve? Which model would you prefer for predicting <code>pemax</code>?</li>
+<li>Check the assumptions of the regression analysis of your final model.</li>
 </ol>
 <p>2 This exercise shows how to incorporate and interpret categorical explanatory variables in a linear regression analysis and practices model building techniques. The data file <code>practical1_lowbw.sav</code> contains data from 189 baby’s (birth weight, outcome) and their mothers (explanatory variables <code>age</code>, <code>smoking</code> status (0 = non-smoker, 1 = smoker), socioeconomic status (<code>SES</code>, see below). a. Test if mothers who smoke during pregnancy have on average children with the same birth weight as mothers who do not smoke during pregnancy. b. Test if age of the mother has an effect on their children’s birth weight.</p>
 <p>The categorical variable socioeconomic status (ses) is coded with values 1 (low SES), 2 (middle SES) and 3 (high SES). As these values are chosen arbitrarily, the variable cannot be used in a linear regression model in this form. We therefor need to create dichotomous dummy variables which represent this variable. For a categorical variable with three categories, we need two dummy variables (d1, d2):</p>

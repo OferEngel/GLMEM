@@ -9,9 +9,11 @@
 <meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
+<meta name="author" content="ofer engel" />
 
+<meta name="date" content="2022-07-01" />
 
-<title>Generalized Linear Mixed Effects</title>
+<title>Rithinking</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -250,72 +252,50 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Generalized Linear Mixed Effects</h1>
+<h1 class="title toc-ignore">Rithinking</h1>
+<h4 class="author">ofer engel</h4>
+<h4 class="date">07/01/2022</h4>
 
 </div>
 
 
-<style>
-.column-left{
-  float: left;
-  width: 60%;
-  text-align: left;
-}
-.column-right{
-  float: right;
-  width: 40%;
-  text-align: right;
-  padding-left: 10px;
-}
-.column-full{
-  float: none;
-  width: 100%;
-  text-align: left;
-}
-</style>
-<div class="column-left">
-<p>What is to be done when different groups in the population exhibit very different properties and relationships between properties? What errors might we make when we aggregate all the data together and analyse it as one? And how do we avoid these errors if we are not sure which groups are we to consider together and which should we consider apart?</p>
-<p>This is an applied course in how to extend the linear regression models in a way that would be more amenable to causal analysis.</p>
+<p>#Chapter 4</p>
+<div id="e3.-model" class="section level2">
+<h2>4E3. Model</h2>
+<p>yi ∼ Normal(μ, σ) μ ∼ Normal(0, 10) σ ∼ Exponential(1)</p>
+<p>$ Pr(, | Y) = $</p>
 </div>
-<div class="column-right">
-
+<div id="m4.-model" class="section level2">
+<h2>4M4. Model</h2>
+<p>yi ~ Normal(μ, σ) μ ~ a + b * year a ~ Normal(0, 50) b ~ Normal(0,10) σ ~ Exponential(1)</p>
 </div>
-<div id="aim" class="section level3">
-<h3>Aim:</h3>
-<ul>
-<li>Explore (clustered) data and apply generalized linear and mixed effects models (multilevel models)</li>
-<li>Understand the theory of (generalized) linear mixed effects models for cross-sectional and longitudinal data, for numerical, dichotomous and count outcome variables</li>
-<li>Build, examine, interpret, expand and compare these models using GEE or (RE)ML estimation</li>
-<li>Perform these techniques using SPSS or R using practical examples(or any other statistical software packages, self-study)</li>
-</ul>
+<div id="h1.-model" class="section level2">
+<h2>4H1. Model</h2>
 </div>
-<div id="method" class="section level3">
-<h3>Method</h3>
-<p>The course is designed to follow the flipped-classroom approach. Readings and videos of the lectures are available before the course begins. You will be expected to read the relevant chapters in the textbook, watch the videos, and comment on them in Perusall PRIOR to attending the course. During the course itself, you will work on quizzes and lab assignments, which you may then submit at the end of each day.</p>
-<div id="prepare" class="section level4 column-left">
-<h4>Prepare</h4>
-<p>To prepare for the course, please complete the assignments, all available on the Perusall platform. You can find the assignments in Nestor under <code>Assignments</code>. You then need to click on the title of the item: <code>CLICK ME to access Perusall</code>.</p>
-<p>Completing the assignment involves watching the video and reading the text before the assigned deadlines. Completing the assignments will contribute towards your attendance and participation in the course.</p>
+<div id="h.2" class="section level2">
+<h2>4H.2</h2>
+<p>For every increase of 10 units in weight, we expect an average increase of 27 units in height.</p>
 </div>
-<div class="column-right">
-
+<div id="h.3" class="section level2">
+<h2>4H.3</h2>
+<p>So when we compare someone whose height of say someone 7.4kg (mu=70.84cm) with someone who is 7.4kg*exp(1) = 20.11, (mu=118.81cm) we expect the height to increase by b1=46.91, in fact 118.8-70.84=47.96, which is pretty accurate. In other words, adding 1 to the log(x) is like multipying x by e, and the result is that the dependent variable increases by b1=46.91.</p>
+<p>if the dependent variable was log(y), we would say that an increase in one in the independent variable would be like multiplying the y by exp(b1)</p>
 </div>
+<div id="h.5" class="section level1">
+<h1>4h.5</h1>
+<p>Return to data(cherry_blossoms) and model the association between blossom date(doy) and March temperature(temp). Note that there are many missing values in both variables. You may consider a linear model, a polynomial, or aspline on temperature. How well does temperature trend predict the blossom trend?</p>
 </div>
-<div id="grading" class="section level3">
-<h3>Grading</h3>
-<ul>
-<li><em>Partial course option:</em> Attendance and participation will reward you with a certificate for 1.5 ECT’s</li>
-<li><em>Full course option:</em> an additional 0.5 ECT is added for lab reports with solutions to exercises (You may submit assignments using either SPSS or R). To pass, your lab reports must demonstrate problem solving skills based on the content of the course, and consist of full, final and complete solutions to the problems.</li>
-</ul>
+<div id="chapter-5" class="section level1">
+<h1>Chapter 5</h1>
+<p>Now let’s do both predictors together let’s see what happens!</p>
+<p>Ok now things with the heights</p>
 </div>
-<div id="resources" class="section level3">
-<h3>Resources</h3>
-<p>Online (Nestor, Perusall, github): lectures, presentations, data-sets and exercises and background literature</p>
-<p>You will find the slides and the datasets in this <a href="https://bit.ly/3puop3I">shared driver</a>. You will need to first log into your rug.nl account in order to access the files.</p>
-<p>Further information can be found in the textbook (Chapters available through a link on <a href="https://nestor.rug.nl/webapps/blackboard/execute/modulepage/view?course_id=_401842_1&amp;cmp_tab_id=_987516_1">nestor</a>): Julian J. Faraway. Extending the linear model with R. Generalized Linear, Mixed Effects and Nonparametric Regression Models.</p>
-<p>… which was used as the framework for this course. Additional material (data, updates, errata) can be found in the following <a href="people.bath.ac.uk/jjf23/ELM">webpage.</a></p>
-<p>To brush up on your R programming skills, there are a variety of free resources you can use, such as the <a href="https://sicss.io/boot_camp/">SICSS bootcamp</a>, Harvard’s famous <a href="https://www.edx.org/course/data-science-r-basics">R Basics course</a>, or Stanford’s <a href="https://www.edx.org/course/r-programming-fundamentals">R Programming fundamentals</a>. If you speak German, <a href="https://shiny.lmes.uni-potsdam.de/startR/">this site</a> is quite nice.</p>
-<p>You may work and submit your assignments on any other statistical software including SPSS, STATA, Python or Julia. However, as R is becoming the lingua franca of data science in many academic circles, this is going to be the default technology used in this course.</p>
+<div id="chapter-7" class="section level1">
+<h1>Chapter 7</h1>
+<p>treatment -&gt; fungus -&gt; h1 &lt;- h0</p>
+</div>
+<div id="chapter-9-mcmc" class="section level1">
+<h1>Chapter 9 MCMC</h1>
 </div>
 
 
