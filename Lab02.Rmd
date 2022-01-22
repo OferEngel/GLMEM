@@ -267,9 +267,6 @@ Add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the anal
 :::
 
  
-c.	Fit a Binomial model, now use with Deviance scaling to correct for overdispersion. Compare the adjusted Log Likelihood to the adjusted Log Likelihood we found in the lecture.
-
-
 
 d.	Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?
 
