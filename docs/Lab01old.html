@@ -11,7 +11,7 @@
 
 
 
-<title>Generalized Linear Mixed Effects</title>
+<title>GLME: Lab 1</title>
 
 <script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
@@ -264,7 +264,7 @@ $(document).ready(function () {
 
 
 
-<h1 class="title toc-ignore">Generalized Linear Mixed Effects</h1>
+<h1 class="title toc-ignore">GLME: Lab 1</h1>
 
 </div>
 
@@ -279,7 +279,6 @@ $(document).ready(function () {
   float: right;
   width: 40%;
   text-align: right;
-  padding-left: 10px;
 }
 .column-full{
   float: none;
@@ -303,50 +302,52 @@ $(document).ready(function () {
 }
 
 </style>
+<div class="column-right">
+<p><img src="%22images/cf.jpg%22" alt="cystic fibrosis" />{width:100px}</p>
+</div>
 <div class="column-left">
-<p>What is to be done when different groups in the population exhibit very different properties and relationships between properties? What errors might we make when we aggregate all the data together and analyse it as one? And how do we avoid these errors if we are not sure which groups are we to consider together and which should we consider apart?</p>
-<p>This is an applied course in how to extend the linear regression models in a way that would be more amenable to causal analysis.</p>
+<p>All datafiles can be found in the shared <a href="https://bit.ly/3puop3I">folder under</a> <code>datasets</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified.</p>
 </div>
-<div class="column-right">
-<p><img src="images/course-structure.jpg" width="338" /></p>
-</div>
-<div id="aim" class="section level3">
-<h3>Aim:</h3>
-<ul>
-<li>Explore (clustered) data and apply generalized linear and mixed effects models (multilevel models)</li>
-<li>Understand the theory of (generalized) linear mixed effects models for cross-sectional and longitudinal data, for numerical, dichotomous and count outcome variables</li>
-<li>Build, examine, interpret, expand and compare these models using GEE or (RE)ML estimation</li>
-<li>Perform these techniques using SPSS or R using practical examples(or any other statistical software packages, self-study)</li>
-</ul>
-</div>
-<div id="method" class="section level3">
-<h3>Method</h3>
-<p>The course is designed to follow the flipped-classroom approach. Readings and videos of the lectures are available before the course begins. You will be expected to read the relevant chapters in the textbook, watch the videos, and comment on them in Perusall PRIOR to attending the course. During the course itself, you will work on quizzes and lab assignments, which you may then submit at the end of each day.</p>
-<div id="prepare" class="section level4 column-left">
-<h4>Prepare</h4>
-<p>To prepare for the course, please complete the assignments, all available on the Perusall platform. You can find the assignments in Nestor under <code>Assignments</code>. You then need to click on the title of the item: <code>CLICK ME to access Perusall</code>.</p>
-<p>Completing the assignment involves watching the video and reading the text before the assigned deadlines. Completing the assignments will contribute towards your attendance and participation in the course.</p>
-</div>
-<div class="column-right">
-<p><img src="images/Perusall.jpg" width="483" /></p>
-</div>
-</div>
-<div id="grading" class="section level3">
-<h3>Grading</h3>
-<ul>
-<li><em>Partial course option:</em> Attendance and participation will reward you with a certificate for 1.5 ECT’s</li>
-<li><em>Full course option:</em> an additional 0.5 ECT is added for lab reports with solutions to exercises (You may submit assignments using either SPSS or R). To pass, your lab reports must demonstrate problem solving skills based on the content of the course, and consist of full, final and complete solutions to the problems.</li>
-</ul>
-</div>
-<div id="resources" class="section level3">
-<h3>Resources</h3>
-<p>Online (Nestor, Perusall, github): lectures, presentations, data-sets and exercises and background literature</p>
-<p>You will find the slides and the datasets in this <a href="https://bit.ly/3puop3I">shared driver</a>. You will need to first log into your rug.nl account in order to access the files.</p>
-<p>Further information can be found in the textbook (Chapters available through a link on <a href="https://nestor.rug.nl/webapps/blackboard/execute/modulepage/view?course_id=_401842_1&amp;cmp_tab_id=_987516_1">nestor</a>): Julian J. Faraway. Extending the linear model with R. Generalized Linear, Mixed Effects and Nonparametric Regression Models.</p>
-<p>… which was used as the framework for this course. Additional material (data, updates, errata) can be found in the following <a href="people.bath.ac.uk/jjf23/ELM">webpage.</a></p>
-<p>To brush up on your R programming skills, there are a variety of free resources you can use, such as the <a href="https://sicss.io/boot_camp/">SICSS bootcamp</a>, Harvard’s famous <a href="https://www.edx.org/course/data-science-r-basics">R Basics course</a>, or Stanford’s <a href="https://www.edx.org/course/r-programming-fundamentals">R Programming fundamentals</a>. If you speak German, <a href="https://shiny.lmes.uni-potsdam.de/startR/">this site</a> is quite nice.</p>
-<p>You may work and submit your assignments on any other statistical software including SPSS, STATA, Python or Julia. However, as R is becoming the lingua franca of data science in many academic circles, this is going to be the default technology used in this course.</p>
-<p><img src="images/index-penguins.jpg" width="568" /></p>
+<div id="exercise-1" class="section level1">
+<h1>Exercise 1</h1>
+<p>In this exercise you will practice the use and interpretation of re-centring explanatory variables and the effect of co-linear explanatory variables. In the data file <code>practical1_cf.sav</code> you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength <code>pemax</code> (maximal static expiratory pressure, a measure of malnutrition, in cmH<sub>2</sub>O). We focus on explanatory variable height to predict <code>pemax</code> first.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explore the data and make a scatterplot of pemax and height. Regress <code>pemax</code> on <code>height</code> and write down the regression equation. Interpret the two regression coefficients. Calculate the confidence intervals for the coefficients.</p></li>
+<li><p>Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model.</p></li>
+</ol>
+<p>Hint for SPSS: use transform <span class="math inline">\(\rightarrow\)</span> compute.</p>
+<pre><code>c.  Based on this model, what is the confidence interval for predicted mean `pemax` for someone with a height of 150 cm?
+
+d.  Add weight to the model. How does the coefficient of height change and why? Did the model improve? Which model would you prefer for predicting `pemax`?
+
+e.  Check the assumptions of the regression analysis of your final model. </code></pre>
+<p>2 This exercise shows how to incorporate and interpret categorical explanatory variables in a linear regression analysis and practices model building techniques. The data file <code>practical1_lowbw.sav</code> contains data from 189 baby’s (birth weight, outcome) and their mothers (explanatory variables <code>age</code>, <code>smoking</code> status (0 = non-smoker, 1 = smoker), socioeconomic status (<code>SES</code>, see below). a. Test if mothers who smoke during pregnancy have on average children with the same birth weight as mothers who do not smoke during pregnancy. b. Test if age of the mother has an effect on their children’s birth weight.</p>
+<p>The categorical variable socioeconomic status (ses) is coded with values 1 (low SES), 2 (middle SES) and 3 (high SES). As these values are chosen arbitrarily, the variable cannot be used in a linear regression model in this form. We therefor need to create dichotomous dummy variables which represent this variable. For a categorical variable with three categories, we need two dummy variables (d1, d2):</p>
+<p>INSERT TABLE HERE</p>
+<p>This way, the low SES group is the reference group (the group for which d1=d2=0). Those in the middle SES category have d1=1 and d2=0, those in the high SES category d1=0 and d2=1. The dummy variables belong together: they contain all information previously held by ses and should be treated as one in the analysis to maintain the correct interpretation.</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li><p>Create dummy variables d1 (middle SES) and d2 (high SES) as described above and perform the linear regression for birth weight on ses using d1 and d2. Interpret the results. Hint for SPSS: us transform &gt; compute, target variable: d1 , Numeric expression: Group = 2 And … // target variable: d2 // Numeric expression: Group = 3, or use transform &gt; recode.</p></li>
+<li><p>Create the best model to predict birth weight using the three possible explanatory variables and check model assumptions. Write down the regression equation.</p></li>
+<li><p>Based on this model, what is the predicted birth weight for a baby with a smoking, high SES mother of age 35? Figure out how to obtain predictive values for birth weight for all babies represented in the data file.</p></li>
+</ol>
+<p>3 This exercise practices the use and interpretation of an interaction effect in a linear regression model. The data file practical1_hyper1.sav contains data on a study on hypertension among the elderly performed in 1995. We focus on predicting systolic blood pressure (<code>sbp95</code>) using variables age and gender (where gender=1 denotes a female, otherwise: not female).</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Make a plot and perform the analysis to answer the question: is systolic blood pressure related to age, ignoring the effect of gender?</p></li>
+<li><p>Make a plot and perform the analysis to answer the question: is systolic blood pressure related to gender, ignoring the effect of age?</p></li>
+<li><p>Perform a multiple linear regression using both age and gender and interpret the results.</p></li>
+<li><p>Make a scatter plot of <code>sbp95</code> and <code>age93</code>. Use colour coding to distinguish men and women and plot regression lines for each subgroup. Does the effect of age on blood pressure seem to differ for men and women?</p></li>
+</ol>
+<p>To test if the difference in slope between the two groups is significantly different from 0, we introduce and test the interaction effect between variables age and gender. For this, we create a new variable <code>ageg</code> which is defined as <span class="math inline">\(X_{age}\cdot X\cdot{gender}\)</span> and test its significance in a multiple linear regression analysis containing both this variable and the two main effects (age and gender).</p>
+<ol start="5" style="list-style-type: lower-alpha">
+<li>Create this variable <code>ageg</code> and perform a linear regression for systolic blood pressure on age, gender and the interaction variable. Write down the regression equation. What is the increase in sbp per year for men? What is it for women? Determine the 95%-for confidence interval for the difference in slope. Is this difference significantly different from 0?</li>
+</ol>
+<ol start="4" style="list-style-type: decimal">
+<li>This exercise recreates the logistic regression model for the heart disease study from today’s lecture. In the data file <code>practical1_chd.sav</code>, you find the dichotomous outcome variable for the occurrence of heart disease (chd, 0 = no, 1 = yes) and explanatory variables denoting the number of daily smoked cigarettes (cigs) and height in inches.</li>
+</ol>
+<ol style="list-style-type: lower-alpha">
+<li><p>Rebuild the logistic regression model as shown in today’s lecture. Based on this model, what is the estimated effect (odds ratio) of height on chd, for fixed smoking behaviour? Is this effect significantly different from 0?</p></li>
+<li><p>Based on this model, what is the estimated effect of smoking a pack a day (=20 cigarettes) on the risk of chd compared to a non-smoker?</p></li>
+</ol>
 </div>
 
 

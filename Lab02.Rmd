@@ -28,9 +28,6 @@ output: html_document
 }
 
 
-.RIcon {
-  background-image: url("images/Rlogo.svg");
-}
 
 .SPSS {
   padding: 1em;
@@ -67,7 +64,7 @@ library(broom)
 
 ```{r, fig.width=4}
 
-include_graphics("images/under-construction.png")
+# include_graphics("images/under-construction.png")
 
 tribble(
   ~`column name`, ~`description`, 

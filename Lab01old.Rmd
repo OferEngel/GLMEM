@@ -60,8 +60,9 @@ library(broom)
 
 
 <div class="column-right">
+![cystic fibrosis]("images/cf.jpg"){width:100px}
 
-```{r img, eval=TRUE, include=TRUE}
+```{r img, eval=TRUE}
 include_graphics("images/cf.jpg")
 # include_graphics("images/index-penguins.jpg")
 ```
@@ -75,59 +76,26 @@ All datafiles can be found in the shared [folder under](https://bit.ly/3puop3I) 
 
 # Exercise 1
 
-In this exercise you will practice the use and interpretation of re-centring explanatory variables and the effect of co-linear explanatory variables. Use the data file `practical1_cf.sav` where you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength `pemax` (maximal static expiratory pressure, a measure of malnutrition, in cmH~2~O). We focus on explanatory variable height to predict `pemax` first. 
+In this exercise you will practice the use and interpretation of re-centring explanatory variables and the effect of co-linear explanatory variables. 
+In the data file `practical1_cf.sav` you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength `pemax` (maximal static expiratory pressure, a measure of malnutrition, in cmH~2~O). We focus on explanatory variable height to predict `pemax` first. 
 
-  a.	Explore the data and make a scatter plot of `pemax` and `height`. Regress `pemax` on `height` and write down the regression equation. Interpret the two regression coefficients. Calculate the confidence intervals for the coefficients. 
-
-  b.	Re-center height around 150 cm (i.e. create a new variable that 'shortens' everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model. 
-  
-
-
-::: { .SPSS }
-For **SPSS Users**!
-Please use transform $\rightarrow$ compute.
-:::
-
-  c.	Based on this model, what is the confidence interval for predicted mean `pemax` for someone with a height of 150 cm?
-
-::: { .RUsers }
-For **R Users**!
-
-use `m1 <- lm(...)` to estimate  model parameters (intercept and slope) and `confint()` for the confidence intervals of those parameters. To find the confidence interval for the predicted means, use the `predict` function with the argument `interval="confidence"`. If you have more than one model, `m1, m2, m3,...`, you can compare between them using the `modelsummary` command. Simply run 
-
-`modelsummary(list(m1, m2, m3,...), stars=TRUE)`
-
-:::
-
-  d.	Create a new model to predict `pemax` from `weight` instead of height, and a third model with weight and height. How do the coefficients change and why? Which model would you prefer for predicting `pemax`, and why?
+  a.	Explore the data and make a scatterplot of pemax and height. Regress `pemax` on `height` and write down the regression equation. Interpret the two regression coefficients. Calculate the confidence intervals for the coefficients. 
     
-```{r cf-scatterplot, include=TRUE}
 
-d <- read.spss("data/practical1_cf.sav", to.data.frame = TRUE)
-ggplot(d, aes(x=height, y=pemax)) + 
-  geom_point() + 
-  geom_smooth(formula=y~x, method="lm", level=0.75) + 
-  theme_minimal()
+  b.	Re-center height around 150 cm (i.e. create a new variable that ``shortens’’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model. 
+    
+Hint for SPSS: use transform $\rightarrow$ compute.
 
-
-```
-```{r cf-models, include=FALSE}
-
-mdl.w <- lm(pemax~height, data=d )
-predict(mdl, data.frame(height=150), interval="confidence")
-mdl.h <- lm(pemax~weight, data=d )
-mdl.hw <- lm(pemax~height+weight, data=d )
-modelsummary(list(mdl.w, mdl.h, mdl.hw), stars=TRUE)
-
-
-```
+    c.	Based on this model, what is the confidence interval for predicted mean `pemax` for someone with a height of 150 cm?
+    
+    d.	Add weight to the model. How does the coefficient of height change and why? Did the model improve? Which model would you prefer for predicting `pemax`?
+    
+    e.	Check the assumptions of the regression analysis of your final model. 
 
 
 
 
-# Exercise 2
-
-This exercise shows how to incorporate and interpret categorical explanatory variables in a linear regression analysis and practices model building techniques. The data file `practical1_lowbw.sav` contains data from 189 baby’s (birth weight, outcome) and their mothers (explanatory variables `age`, `smoking` status (0 = non-smoker, 1 = smoker), socioeconomic status (`SES`, see below).
+2 This exercise shows how to incorporate and interpret categorical explanatory variables in a linear regression analysis and practices model building techniques. The data file `practical1_lowbw.sav` contains data from 189 baby’s (birth weight, outcome) and their mothers (explanatory variables `age`, `smoking` status (0 = non-smoker, 1 = smoker), socioeconomic status (`SES`, see below).
 a.	Test if mothers who smoke during pregnancy have on average children with the same birth weight as mothers who do not smoke during pregnancy.
 b.	Test if age of the mother has an effect on their children’s birth weight.
 
@@ -145,12 +113,6 @@ d.	Create the best model to predict birth weight using the three possible explan
 
 e.	Based on this model, what is the predicted birth weight for a  baby with a smoking, high SES mother of age 35? Figure out how to obtain predictive values for birth weight for all babies represented in the data file. 
 
-# Exercise 2
-
-Imagine we have a random variable $X$, consisting of 100 observations, sampled from a normal distribution of   
-
-
-# Exercise 4 (BONUS)
 
 3 This exercise practices the use and interpretation of an interaction effect in a linear regression model. 
 The data file practical1_hyper1.sav contains data on a study on hypertension among the elderly performed in 1995. We focus on predicting systolic blood pressure (`sbp95`)  using variables age and gender (where gender=1 denotes a female, otherwise: not female).

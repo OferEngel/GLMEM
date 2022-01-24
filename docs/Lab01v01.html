@@ -1,0 +1,720 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+<meta charset="utf-8" />
+<meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
+
+
+
+
+<title>GLME: Lab 1</title>
+
+<script src="site_libs/header-attrs-2.10/header-attrs.js"></script>
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/flatly.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<style>h1 {font-size: 34px;}
+       h1.title {font-size: 38px;}
+       h2 {font-size: 30px;}
+       h3 {font-size: 24px;}
+       h4 {font-size: 18px;}
+       h5 {font-size: 16px;}
+       h6 {font-size: 12px;}
+       code {color: inherit; background-color: rgba(0, 0, 0, 0.04);}
+       pre:not([class]) { background-color: white }</style>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/kePrint-0.0.1/kePrint.js"></script>
+<link href="site_libs/lightable-0.0.1/lightable.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/all.css" rel="stylesheet" />
+<link href="site_libs/font-awesome-5.1.0/css/v4-shims.css" rel="stylesheet" />
+
+<style type="text/css">
+  code{white-space: pre-wrap;}
+  span.smallcaps{font-variant: small-caps;}
+  span.underline{text-decoration: underline;}
+  div.column{display: inline-block; vertical-align: top; width: 50%;}
+  div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+  ul.task-list{list-style: none;}
+    </style>
+
+
+<style type="text/css">
+  code {
+    white-space: pre;
+  }
+  .sourceCode {
+    overflow: visible;
+  }
+</style>
+<style type="text/css" data-origin="pandoc">
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+    color: #aaaaaa;
+  }
+pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+div.sourceCode
+  {  background-color: #f8f8f8; }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+code span.al { color: #ef2929; } /* Alert */
+code span.an { color: #8f5902; font-weight: bold; font-style: italic; } /* Annotation */
+code span.at { color: #c4a000; } /* Attribute */
+code span.bn { color: #0000cf; } /* BaseN */
+code span.cf { color: #204a87; font-weight: bold; } /* ControlFlow */
+code span.ch { color: #4e9a06; } /* Char */
+code span.cn { color: #000000; } /* Constant */
+code span.co { color: #8f5902; font-style: italic; } /* Comment */
+code span.cv { color: #8f5902; font-weight: bold; font-style: italic; } /* CommentVar */
+code span.do { color: #8f5902; font-weight: bold; font-style: italic; } /* Documentation */
+code span.dt { color: #204a87; } /* DataType */
+code span.dv { color: #0000cf; } /* DecVal */
+code span.er { color: #a40000; font-weight: bold; } /* Error */
+code span.ex { } /* Extension */
+code span.fl { color: #0000cf; } /* Float */
+code span.fu { color: #000000; } /* Function */
+code span.im { } /* Import */
+code span.in { color: #8f5902; font-weight: bold; font-style: italic; } /* Information */
+code span.kw { color: #204a87; font-weight: bold; } /* Keyword */
+code span.op { color: #ce5c00; font-weight: bold; } /* Operator */
+code span.ot { color: #8f5902; } /* Other */
+code span.pp { color: #8f5902; font-style: italic; } /* Preprocessor */
+code span.sc { color: #000000; } /* SpecialChar */
+code span.ss { color: #4e9a06; } /* SpecialString */
+code span.st { color: #4e9a06; } /* String */
+code span.va { color: #000000; } /* Variable */
+code span.vs { color: #4e9a06; } /* VerbatimString */
+code span.wa { color: #8f5902; font-weight: bold; font-style: italic; } /* Warning */
+
+</style>
+<script>
+// apply pandoc div.sourceCode style to pre.sourceCode instead
+(function() {
+  var sheets = document.styleSheets;
+  for (var i = 0; i < sheets.length; i++) {
+    if (sheets[i].ownerNode.dataset["origin"] !== "pandoc") continue;
+    try { var rules = sheets[i].cssRules; } catch (e) { continue; }
+    for (var j = 0; j < rules.length; j++) {
+      var rule = rules[j];
+      // check if there is a div.sourceCode rule
+      if (rule.type !== rule.STYLE_RULE || rule.selectorText !== "div.sourceCode") continue;
+      var style = rule.style.cssText;
+      // check if color or background-color is set
+      if (rule.style.color === '' && rule.style.backgroundColor === '') continue;
+      // replace div.sourceCode by a pre.sourceCode rule
+      sheets[i].deleteRule(j);
+      sheets[i].insertRule('pre.sourceCode{' + style + '}', j);
+    }
+  }
+})();
+</script>
+
+
+
+
+
+
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+img {
+  max-width:100%;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+pre code {
+  padding: 0;
+}
+</style>
+
+
+<style type="text/css">
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #adb5bd;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script type="text/javascript">
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.tab('show');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+
+  // Navbar adjustments
+  var navHeight = $(".navbar").first().height() + 15;
+  var style = document.createElement('style');
+  var pt = "padding-top: " + navHeight + "px; ";
+  var mt = "margin-top: -" + navHeight + "px; ";
+  var css = "";
+  // offset scroll position for anchor links (for fixed navbar)
+  for (var i = 1; i <= 6; i++) {
+    css += ".section h" + i + "{ " + pt + mt + "}\n";
+  }
+  style.innerHTML = "body {" + pt + "padding-bottom: 40px; }\n" + css;
+  document.head.appendChild(style);
+});
+</script>
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+  background-color: transparent;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<!-- code folding -->
+
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Generalized Linear Mixed Effects</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">
+    <span class="fa fa-home"></span>
+     
+    Overview
+  </a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-flask"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab01v01.html">Lab 1</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div id="header">
+
+
+
+<h1 class="title toc-ignore">GLME: Lab 1</h1>
+
+</div>
+
+
+<style>
+.column-left{
+  float: left;
+  width: 60%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 30%;
+  text-align: right;
+}
+.column-full{
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
+</style>
+<div class="column-right">
+<p><img src="images/cf.jpg" width="282" /></p>
+</div>
+<div class="column-left">
+<p>All datafiles can be found in the shared <a href="https://bit.ly/3puop3I">folder under</a> <code>datasets</code>. For testing, use <span class="math inline">\(\alpha=0.05\)</span> unless otherwise specified.</p>
+</div>
+<div id="exercise-1" class="section level1">
+<h1>Exercise 1</h1>
+<p>In this exercise you will practice the use and interpretation of re-centring explanatory variables and the effect of co-linear explanatory variables. Use the data file <code>practical1_cf.sav</code> where you can find data from 25 patients with cystic fibrosis. The outcome variable is the index of respiratory muscle strength <code>pemax</code> (maximal static expiratory pressure, a measure of malnutrition, in cmH<sub>2</sub>O). We focus on explanatory variable height to predict <code>pemax</code> first.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Explore the data and make a scatter plot of <code>pemax</code> and <code>height</code>. Regress <code>pemax</code> on <code>height</code> and write down the regression equation. Interpret the two regression coefficients. Calculate the confidence intervals for the coefficients.</p></li>
+<li><p>Re-center height around 150 cm (i.e. create a new variable that ‘shortens’ everyone by 150 cm). Make a new scatter plot and compare this with the previous one. Now repeat the analysis, using this variable as the explanatory variable. What is the interpretation of the coefficients? Compare the results of this model with the previous model.</p></li>
+<li><p>Based on this model, what is the confidence interval for predicted mean <code>pemax</code> for someone with a height of 150 cm?</p></li>
+<li><p>Create a new model to predict <code>pemax</code> from <code>weight</code> instead of height, and a third model with <code>weight</code> and <code>height</code>. How do the coefficients change and why? Which model would you prefer for predicting <code>pemax</code>, and why?</p></li>
+</ol>
+<div class="SPSS">
+<p>For <strong>SPSS Users</strong>!</p>
+<p>Please use transform <span class="math inline">\(\rightarrow\)</span> compute.</p>
+</div>
+<div class="RUsers">
+<p>For <strong>R Users</strong>!</p>
+<p>use <code>m1 &lt;- lm(...)</code> to estimate model parameters (intercept and slope) and <code>confint()</code> for the confidence intervals of those parameters. To find the confidence interval for the predicted means, use the <code>predict</code> function with the argument <code>interval="confidence"</code>. If you have more than one model, <code>m1, m2, m3,...</code>, you can compare between them using the <code>modelsummary</code> command.</p>
+<p>Simply run</p>
+<p><code>modelsummary(list(m1, m2, m3,...), stars=TRUE)</code></p>
+<p>But don’t forget to install and load the <code>modelsummary</code> library!</p>
+</div>
+</div>
+<div id="exercise-2" class="section level1">
+<h1>Exercise 2</h1>
+<p>You may choose between this exercise and exercise 3 (You may also do both!).</p>
+<p>Imagine we have a random variable <span class="math inline">\(X\)</span>, consisting of 100 observations, randomly sampled from a normal distribution with two parameters; its mean is <span class="math inline">\(\mu=3\)</span> and its standard deviation is <span class="math inline">\(\sigma=5\)</span>. But you don’t know the distribution’s paramaters, you cannot observe them directly - you can only observe the values in your sample.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The following command assures that every time you </span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co"># sample the distribution, you will get the exact same </span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># results..</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">set.seed</span>(<span class="dv">111</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>X <span class="ot">&lt;-</span> <span class="fu">rnorm</span>(<span class="at">n=</span><span class="dv">100</span>, <span class="at">mean=</span><span class="dv">3</span>, <span class="at">sd=</span><span class="dv">5</span>)</span></code></pre></div>
+<p>Had you known the parameters of the distribution <span class="math inline">\(\mu, \sigma\)</span>, you would know the probability of observing a certain value <span class="math inline">\(x\)</span> is: <span class="math display">\[P(X=x|\mu, \sigma) = \frac{1}{\sqrt{2\pi}\sigma}e^\frac{(x-\mu)^2}{2\sigma^2} \]</span> The probability of observing multiple independent values <span class="math inline">\(x_1, x_2, ..., x_n\)</span> is</p>
+<p><span class="math display">\[P(X=x_1, x_2, ... x_n |\mu, \sigma) = \prod_{i=1..n}P(X=x_i|\mu, \sigma) \\
+= \prod_{i=1..n}\frac{1}{\sqrt{2\pi}\sigma}e^\frac{(x_i-\mu)^2}{2\sigma^2} \]</span></p>
+<div class="column-right">
+<p><img src="Lab01v01_files/figure-html/show-contour-1.png" width="672" /></p>
+</div>
+<p>This probability is also known as the likelihood. It defines the probability of making a set of observations, assuming that we are drawing from a particular distribution. It is often mathematically more convenient to look at the log of the likelihood. The parameters that maximize the log-likelihood are also known as the log-likelihood estimates of our parameters. In what follows, we are going to calculate a number of combinations of parameters <span class="math inline">\(\mu, \sigma\)</span> and find which combination maximizes the log likelihood for the our observation of <span class="math inline">\(X\)</span>. First, we create a function to calculate the log likelihood for our data and for a set of parameters. Then, we create a data-frame with combinations of parameters, where <span class="math inline">\(\mu\in[2,4]\)</span> and <span class="math inline">\(\sigma\in[4,6]\)</span>. Notice that this range contains the real parameters: <span class="math inline">\(\mu=3, \sigma=5\)</span>. We hope that the log likelihood would be maximized for a combination of parameters in the vicinity of the real parameters.</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>What is the distribution of the log-likelihood? What are the values of the parameters <span class="math inline">\(\mu, \sigma\)</span> that maximize the log-likelihood?</p></li>
+<li><p>Create a heat-map or a contour map as follows, and identify which parameter values maximize the log likelihood.</p></li>
+<li><p>Are these the parameters you expected? Why or why not?</p></li>
+</ol>
+<div class="sourceCode" id="cb2"><pre class="sourceCode r"><code class="sourceCode r"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(tidyverse)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">library</span>(metR) <span class="co"># &lt;-- this library for the contour plot...</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># likelihood: given the parameters of a normal distribution, </span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># sigma and mu, what is the probability of observing </span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="co"># a certain outcome, x</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># p(x|mu,sigma) = dnorm(x, mean=mu, sd=sigma )</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>lik <span class="ot">&lt;-</span> <span class="cf">function</span>(x, mu, sigma){</span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">return</span>(<span class="fu">sum</span>(<span class="fu">log</span>(<span class="fu">dnorm</span>(x, <span class="at">mean=</span>mu, <span class="at">sd=</span>sigma))))  </span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Now we want to create a data frame with combinations of </span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="co"># mu and sigma. You may want to decrease the range of parameters</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a><span class="co"># or the number of combinations to improve your plot.</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>df <span class="ot">&lt;-</span> <span class="fu">expand.grid</span>(<span class="at">mu =</span> <span class="fu">seq</span>(<span class="dv">2</span>,<span class="dv">4</span>, <span class="at">b=</span>.<span class="dv">02</span>), </span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>                  <span class="at">sigma =</span> <span class="fu">seq</span>(<span class="dv">4</span>,<span class="dv">6</span>, <span class="at">b=</span>.<span class="dv">02</span>))</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="co"># Here we calculate the log-likelihood for each combination</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>df<span class="sc">$</span>loglik <span class="ot">&lt;-</span> <span class="fu">rep</span>(<span class="cn">NA</span>, <span class="fu">nrow</span>(df))</span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="cf">for</span>(i <span class="cf">in</span> <span class="dv">1</span><span class="sc">:</span><span class="fu">nrow</span>(df)){</span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>  mu    <span class="ot">&lt;-</span> df<span class="sc">$</span>mu[i]</span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>  sigma <span class="ot">&lt;-</span> df<span class="sc">$</span>sigma[i]</span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>  df<span class="sc">$</span>loglik[i] <span class="ot">&lt;-</span> <span class="fu">lik</span>(X,mu,sigma)</span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a><span class="co"># Finally, we plot a heat map and a contour map, </span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a><span class="co"># a representation of a three dimensional space where the x-axis</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a><span class="co"># represents the mu, the y-axis represents the standard deviation, </span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a><span class="co"># and the colour or contour represents the log likelihood.</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>mu, <span class="at">y=</span>sigma,</span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>             <span class="at">fill=</span>loglik)) <span class="sc">+</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_tile</span>()</span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a>df <span class="sc">%&gt;%</span>  </span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x=</span>mu, <span class="at">y=</span>sigma, </span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>             <span class="at">z=</span>loglik)) <span class="sc">+</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_contour</span>() <span class="sc">+</span> </span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_text_contour</span>() </span></code></pre></div>
+</div>
+<div id="exercise-3" class="section level1">
+<h1>Exercise 3</h1>
+<p>You may choose between this exercise and exercise 2 (You may also choose to do both!).</p>
+<p>In this exercise you may practice interpreting an interaction effect in a linear regression model. The data file <code>practical1_hyper1.sav</code> contains data on a study on hypertension among the elderly performed in 1995. We focus on predicting systolic blood pressure (<code>sbp</code>) using variables age and gender (where <code>gender=1</code> denotes a female, otherwise: not female).</p>
+<ol style="list-style-type: lower-alpha">
+<li><p>Create plots to judge whether systolic blood pressure is related to age, independent of gender, and whether systolic blood pressure is related to gender, independent of age.</p></li>
+<li><p>Perform a multiple linear regression using both age and gender and interpret the results. Write down the equation for females (<code>gender=1</code>) and a separate equation for non-females (<code>gender=0</code>). Compare between the two equations, highlighting similarities and differences.</p></li>
+<li><p>To test if the difference in slope between the two groups is significantly different from 0, we introduce and test the interaction effect between variables age and gender. For this, you may create a new variable (e.g., <code>ageg</code>) which is defined as <span class="math inline">\(X_{age}\cdot X_{gender}\)</span>. Test the significance of the associated coefficient in a multiple linear regression analysis containing both this variable and the two main effects (age and gender).</p></li>
+<li><p>Write down the regression equation for females and for non-females separately. Interpret the coefficients in the two equationsIs the difference in slope significant?</p></li>
+</ol>
+<img src="Lab01v01_files/figure-html/ex3-1.png" width="672" />
+<table class="table" style="width: auto !important; margin-left: auto; margin-right: auto;">
+<thead>
+<tr>
+<th style="text-align:left;">
+</th>
+<th style="text-align:center;">
+Model 1
+</th>
+<th style="text-align:center;">
+Model 2
+</th>
+<th style="text-align:center;">
+Model 3
+</th>
+<th style="text-align:center;">
+Model 4
+</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td style="text-align:left;">
+(Intercept)
+</td>
+<td style="text-align:center;">
+115.173 (6.142)***
+</td>
+<td style="text-align:center;">
+159.989 (0.915)***
+</td>
+<td style="text-align:center;">
+114.539 (6.120)***
+</td>
+<td style="text-align:center;">
+131.668 (9.640)***
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+age
+</td>
+<td style="text-align:center;">
+0.718 (0.092)***
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+0.690 (0.092)***
+</td>
+<td style="text-align:center;">
+0.430 (0.146)**
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+genderfemale
+</td>
+<td style="text-align:center;">
+</td>
+<td style="text-align:center;">
+5.281 (1.236)***
+</td>
+<td style="text-align:center;">
+4.534 (1.220)***
+</td>
+<td style="text-align:center;">
+-24.046 (12.498)+
+</td>
+</tr>
+<tr>
+<td style="text-align:left;box-shadow: 0px 1px">
+age × genderfemale
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+</td>
+<td style="text-align:center;box-shadow: 0px 1px">
+0.431 (0.188)*
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Num.Obs.
+</td>
+<td style="text-align:center;">
+1596
+</td>
+<td style="text-align:center;">
+1596
+</td>
+<td style="text-align:center;">
+1596
+</td>
+<td style="text-align:center;">
+1596
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2
+</td>
+<td style="text-align:center;">
+0.037
+</td>
+<td style="text-align:center;">
+0.011
+</td>
+<td style="text-align:center;">
+0.045
+</td>
+<td style="text-align:center;">
+0.048
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+R2 Adj.
+</td>
+<td style="text-align:center;">
+0.036
+</td>
+<td style="text-align:center;">
+0.011
+</td>
+<td style="text-align:center;">
+0.044
+</td>
+<td style="text-align:center;">
+0.046
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+AIC
+</td>
+<td style="text-align:center;">
+14712.3
+</td>
+<td style="text-align:center;">
+14754.0
+</td>
+<td style="text-align:center;">
+14700.5
+</td>
+<td style="text-align:center;">
+14697.3
+</td>
+</tr>
+<tr>
+<td style="text-align:left;">
+Log.Lik.
+</td>
+<td style="text-align:center;">
+-7353.163
+</td>
+<td style="text-align:center;">
+-7374.016
+</td>
+<td style="text-align:center;">
+-7346.267
+</td>
+<td style="text-align:center;">
+-7343.625
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+
+
+
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.odd').parent('tbody').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open');
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

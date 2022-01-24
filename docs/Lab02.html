@@ -238,6 +238,20 @@ $(document).ready(function () {
     Overview
   </a>
 </li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    <span class="fa fa-flask"></span>
+     
+    Labs
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="Lab01v01.html">Lab 1</a>
+    </li>
+  </ul>
+</li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
         
@@ -279,9 +293,6 @@ $(document).ready(function () {
 }
 
 
-.RIcon {
-  background-image: url("images/Rlogo.svg");
-}
 
 .SPSS {
   padding: 1em;
@@ -350,9 +361,8 @@ $(document).ready(function () {
 <p>For <strong>SPSS Users</strong></p>
 <p>Add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the analysis again and let SPSS save the predicted value of the mean response and its lower and upper bounds.</p>
 </div>
-<ol start="3" style="list-style-type: lower-alpha">
-<li><p>Fit a Binomial model, now use with Deviance scaling to correct for overdispersion. Compare the adjusted Log Likelihood to the adjusted Log Likelihood we found in the lecture.</p></li>
-<li><p>Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?</p></li>
+<ol start="4" style="list-style-type: lower-alpha">
+<li>Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?</li>
 </ol>
 </div>
 

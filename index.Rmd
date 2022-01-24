@@ -21,6 +21,22 @@ output: html_document
   width: 100%;
   text-align: left;
 }
+
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
 </style>
 
 ```{r setup, include=FALSE}
