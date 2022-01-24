@@ -107,7 +107,7 @@ You will find the slides and the datasets in this [shared driver](https://bit.ly
 Further information can be found in the textbook (Chapters available through a link on [nestor](https://nestor.rug.nl/webapps/blackboard/execute/modulepage/view?course_id=_401842_1&cmp_tab_id=_987516_1)): 
 Julian J. Faraway. Extending the linear model with R. Generalized Linear, Mixed Effects and Nonparametric Regression Models. 
 
-... which was used as the framework for this course.  Additional material (data, updates, errata) can be found in the following [webpage.](people.bath.ac.uk/jjf23/ELM ) 
+... which was used as the framework for this course.  Additional material (data, updates, errata) can be found in the following [webpage.](https://julianfaraway.github.io/faraway/ELM/ ) 
 
 To brush up on your R programming skills, there are a variety of free resources you can use, such as the [SICSS bootcamp](https://sicss.io/boot_camp/), Harvard’s famous [R Basics course](https://www.edx.org/course/data-science-r-basics), or Stanford’s [R Programming fundamentals](https://www.edx.org/course/r-programming-fundamentals). If you speak German, [this site](https://shiny.lmes.uni-potsdam.de/startR/) is quite nice.
 

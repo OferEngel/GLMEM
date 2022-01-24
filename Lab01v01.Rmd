@@ -214,11 +214,11 @@ df %>%
 
 This probability is also known as the likelihood. It defines the probability of making a set of observations, assuming that we are drawing from a particular distribution. It is often mathematically more convenient to look at the log of the likelihood. The parameters that maximize the log-likelihood are also known as the log-likelihood estimates of our parameters. In what follows, we are going to calculate a number of combinations of parameters $\mu, \sigma$ and find which combination maximizes the log likelihood for the our observation of $X$. First, we create a function to calculate the log likelihood for our data and for a set of parameters. Then, we create a data-frame with combinations of parameters, where $\mu\in[2,4]$ and $\sigma\in[4,6]$. Notice that this range contains the real parameters: $\mu=3, \sigma=5$. We hope that the log likelihood would be maximized for a combination of parameters in the vicinity of the real parameters. 
 
-a. What is the distribution of the log-likelihood? What are the values of the parameters $\mu, \sigma$ that maximize the log-likelihood?
+a. Create a graph showing the distribution of the log-likelihood. What kind of distribution is it? 
 
-b. Create a heat-map or a contour map as follows, and identify which parameter values maximize the log likelihood. 
+b. What are the values of the parameters $\mu, \sigma$ that maximize the log-likelihood? What is the maximum log-likelihood for those values? How do these values compare to the mean and standard deviation of the random variable $X$ ?
 
-c. Are these the parameters you expected? Why or why not? 
+c. BONUS QUESTION: Create a heat-map or a contour map as follows, and identify which parameter values maximize the log likelihood.Are these the parameters you expected? Why or why not? 
 
 
 
@@ -226,6 +226,7 @@ c. Are these the parameters you expected? Why or why not?
 
 
 ```{r show-ex2, eval=FALSE, echo=TRUE, include=TRUE}
+
 library(tidyverse)
 library(metR) # <-- this library for the contour plot...
 
