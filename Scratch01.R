@@ -423,7 +423,6 @@ d %>% mutate(rate=admit/applications) %>%
 xtabs(~dept+applicant.gender, data=d)
 
 
-d <- read.spss("data/practical2_UCBadmit.sav", to.data.frame = TRUE)
-d %>% select(dept, gender=applicant.gender, rate)
+
   
 
