@@ -14,6 +14,7 @@ output: html_document
   float: right;
   width: 40%;
   text-align: right;
+  font-size: 10px;
 }
 
 .column-right-text-left{
@@ -65,12 +66,13 @@ library(modelsummary)
 library(janitor)
 library(kableExtra)
 library(broom)
+library(emo)
 
 ```
 
 
 
-For testing, use $\alpha=0.05$ unless otherwise specified. Datsets can be found under our [shared drive](https://bit.ly/3puop3I). Please do all three exercises. 
+For testing, use $\alpha=0.05$ unless otherwise specified. Datsets can be found under our [shared drive](https://bit.ly/3puop3I). Please try to do all three exercises (but if it is too hard, it is ok to choose only two `r emo::ji("victory")`). 
 
 
 
