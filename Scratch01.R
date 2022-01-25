@@ -179,6 +179,11 @@ summary(ml.mdl, dispersion=disp.deviance)
 library(rethinking) 
 data(UCBadmit)
 d <-UCBadmit
+library(haven)
+write_sav(d, "data/practical2_UCBadmit.sav")
+d <- read_sav("data/practical2_UCBadmit.sav")
+
+
 d$gid <-ifelse(d$applicant.gender=="male",1L,2L)
 d$gid_1 <- d$gid-1
 dat <-list(A=d$admit,N=d$applications,gid=d$gid,gid_1=d$gid_1)
@@ -396,3 +401,29 @@ df <- data.frame(x1=rnorm(100), x2=rnorm(100)) %>% mutate(y=.3*x1+.7*x2+rnorm(10
 mdl <- lm(y~., data=df) 
 summary(mdl)
 cor(predict(mdl), df$y)
+
+
+
+
+
+
+mtcars %>%
+  group_by(cyl, am) %>%
+  summarise(mpg = mean(mpg), .groups = "drop") %>%
+  spread(am, mpg)
+
+
+d %>% mutate(rate=admit/applications) %>% 
+  spread(applicant.gender, rate)
+
+
+d %>% mutate(rate=admit/applications) %>% 
+  pivot_wider(names_from=applicant.gender, values_from = rate)
+
+xtabs(~dept+applicant.gender, data=d)
+
+
+d <- read.spss("data/practical2_UCBadmit.sav", to.data.frame = TRUE)
+d %>% select(dept, gender=applicant.gender, rate)
+  
+

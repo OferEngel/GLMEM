@@ -1,0 +1,272 @@
+---
+title: "GLME: Lab 2"
+#author: "Ofer Engel"
+output: html_document
+---
+
+<style>
+.column-left{
+  float: left;
+  width: 60%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 40%;
+  text-align: right;
+}
+.column-full{
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
+.center {
+  text-align: center;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(eval = FALSE)
+
+
+
+library(knitr)
+library(tidyverse)
+library(lme4)
+library(foreign)
+library(modelsummary)
+library(janitor)
+library(kableExtra)
+library(broom)
+
+```
+
+
+```{r, fig.width=4}
+
+# include_graphics("images/under-construction.png")
+
+tribble(
+  ~`column name`, ~`description`, 
+  "ID",    "Low Birth Weight Baby (1=Yes under 2500g, 0=No)",
+  "LOW",   "Mother's age in years",
+  "AGE",   "Weight at Last Period",
+  "LWT",   "Race (1=White, 2=Black, 3=Other)",
+  "SMOKE", "Smoke during Pregnancy (1=Yes, 0=No)",
+  "PTL",   "History of Premature Labour (# of times)",
+  "HT",    "History of Hypertension (1=Yes, 0=No)",
+  "UI",    "Presence of Uterine Irritability (1=Yes, 0=No)",
+  "FTV",   "Visits to Doctor During 1st trimester",
+  "BWT",   "Baby's birth Weight in Grams"
+) %>%   kbl() %>%
+  kable_paper("hover", full_width = F)
+
+
+```
+
+All datafiles and Answers to exercises for either `SPSS` or `R` can be found in Nestor under `Content`. For testing, use $\alpha=0.05$ unless otherwise specified. Datsets can be found under our [shared drive](https://bit.ly/3puop3I)
+
+# Exercise 1
+
+This exercise examines the differences between using the linear regression model versus the generalized linear regression model where the distribution of the response variable is considered normal. You will find the data in the file `practical2_lowbwt.sav`. 
+
+
+
+a. Perform a linear regression of the variable `BWT` (birth weight) on the explanatory variables `SMOKE` and `LWT` (weight of the mother during last menstrual period). 
+
+
+
+::: { .RUsers }
+For **R Users**!
+
+use `lm(...)` for the model and `confint()` for the confidence intervals. If you have two models, `m1` and `m2`, you may compare them by using `modelsummary(list(m1, m2), stars=TRUE)`
+:::
+
+
+b. Compare these results with the results of an analysis in `GzLM` (SPSS users) or `glm(...)` (R users) in which you define the distribution of the response variable as normal (let the software create confidence intervals for the regression coefficients). Do the results agree? Where do they differ and why? In your answer, please comment on the similarities and difference in the diagnostics when comparing the two  models. 
+
+c. What are the degrees of freedom associated with the two deviance indicators? Explain why these indicators have those values.  
+
+d. BONUS QUESTION: For the model in part a, calculate the residual standard error using the model residuals. For the model in part b, calculate the null deviance and the residual deviance by using the residuals for our model and for the null model. (Hint: to answer these questions, you  need to calculate the sum of the squares of the  residuals by typing `residuals(mdl)`, where `mdl` is your model, the output of the `lm` or `glm` function.) 
+
+
+
+```{r, include=FALSE, eval=FALSE}
+
+d <- read.spss("data/practical2_lowbwt.sav", to.data.frame = TRUE)
+m0 <- lm(BWT ~ 1, data=d)
+m1 <- lm(BWT ~ SMOKE + LWT, data=d)
+m2 <- glm(BWT ~ SMOKE + LWT, data=d)
+# confint(m1)
+# confint(m2)
+modelsummary(list(m1, m2), stars=TRUE)
+
+# Calculate the standard error: 
+sqrt(sum((residuals(m1))^2)/186)
+
+# Calculate the residual deviance 
+# For the null model
+sum((residuals(m0))^2)
+# For  model m2
+sum((residuals(m2))^2)
+
+
+
+```
+
+
+# Exercise 2
+
+This exercise examines the differences between the logistic regression model/generalized linear model with logit link function and the generalized linear model with probit link function. 
+Open the file `practical2_lowbwt.sav`.
+
+a.	Make a cross tabulation  of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well. What do you conclude from the table about the association between smoking and low birth weight?  
+
+::: {#crosstab .SPSS }
+For **SPSS Users**
+
+`Analyze > Descriptive statistics > Crosstabs`
+
+
+:::
+
+::: {#crosstab .RUsers }
+
+
+For **R Users**
+
+You could use either `xtable` for this, or use the functions from the `janitor` library, namely `tabyl`, `adorn_percentages`,  `adorn_pct_formatting` and `adorn_title`. 
+
+BONUS: If you use `xtabs` in R and the formula `~ SMOKE + LOW`, you can run a chi square test by running `summary(xtabs(...))`. Try to run this and interpret the results!
+
+
+:::
+
+```{r}
+library(purrr)
+
+d %>% tabyl(SMOKE, LOW) %>% 
+  adorn_percentages("row") %>%
+  adorn_pct_formatting(digits = 1) %>%
+  adorn_title () 
+
+
+xt <- xtabs(data=d, formula = ~ SMOKE + LOW)
+summary(xt)
+
+```
+
+
+b.	Perform a logistic regression of the variable LOW on the explanatory variable SMOKE by building a Generalized linear model, using the logit link function. Take LOW as the dependent and SMOKE as predictor. What is the interpretation of the coefficient of SMOKE? Compare your results with the results of the two models you created in the previous exercise. Pay attention to similarities and differences in the diagnostics of the two types of models. Which (if any) of the three models is most informative or useful? 
+
+```{r}
+
+m3 <- glm(LOW ~ SMOKE, data=d, family=binomial)
+summary(m3)
+
+```
+
+
+# Exercise 3
+
+
+This exercise further explores the Dupuytren data we already encountered in the lectures. It builds and compares various models. You will need to use the file `practical2_dupuytren.sav`. 
+
+a.	Is the probability of having Dupuytren related to Age? Fit a Binomial model with logistic link function without and with correcting for over-dispersion using Pearson’s Chi-square value and compare your results with the results shown in the recorded lecture. Compare the model with and without correcting for over-dispersion.
+
+
+::: {#crosstab .RUsers }
+
+
+For **R Users**
+
+To calculate the over-dispersion, use the sum of squares of pearson's residuals, which you can find as follows: `residuals(mdl, type="pearson")`. 
+
+You then print out the model using the summary and the dispersion argument as follows: `summary(mdl, dispersion=disp)`. Alternatively, you can calculate the model with over-dispersion directly using `glm` with `family=quasibinomial`.
+
+To calculate the predicted values, use the `predict`  function and add the new data you want to predict in the function call. Make sure you use the correct type for the prediction (`response`) and pass the dispersion you are interested in. When evaluating the 95% confidence interval, use the formula $\hat{Y}\pm1.96*SE$.
+
+:::
+
+
+```{r, eval=TRUE}
+
+d <- read.spss("data/practical2_dupuytren.sav", to.data.frame = TRUE)
+mdl <- glm(cbind(Count, TOTAL-Count) ~ Age, family=binomial, data =d)
+disp <- sum(residuals(mdl, type="pearson")^2)/df.residual(mdl)
+summary(mdl, dispersion=disp)
+
+qmdl <- glm(cbind(Count, TOTAL-Count) ~ Age, 
+           family=quasibinomial, data =d)
+
+
+```
+
+
+b.	Give the 95% CI for the probability to have Dupuytren at the age of 78, according to the Binomial model. Compare the estimate to the graph on slide 92 (or alternatively, reproduce the graph and then compare the estimate.)
+
+```{r, eval=TRUE, include=TRUE}
+xseq <- seq(25,100,by=1)
+pred <- predict.glm(mdl, data.frame(Age=xseq), type="response", se.fit=TRUE) 
+qpred <- predict.glm(qmdl, data.frame(Age=xseq), type="response", se.fit=TRUE)
+pred78 <- predict.glm(qmdl, data.frame(Age=78), 
+                      type="response", 
+                      se.fit=TRUE)
+
+# 95% CI: pred78$fit +1.96*c(-1,1)*pred78$se.fit
+ggplot() + 
+  geom_point(data=d, aes(x=Age, y=PROP)) + labs(y="Prevalence") + 
+  geom_line(data=data.frame(x=xseq, y=pred$fit), aes(x,y)) +
+  geom_ribbon(mapping=aes(x=xseq, 
+              ymin=qpred$fit-1.96*qpred$se.fit,      
+              ymax=qpred$fit+1.96*qpred$se.fit), alpha=.3)+
+  geom_ribbon(mapping=aes(x=xseq, 
+              ymin=pred$fit-1.96*pred$se.fit,      
+              ymax=pred$fit+1.96*pred$se.fit), alpha=.4) + 
+  geom_segment(mapping=aes(x=78, 
+                           xend=78, 
+                           y=pred78$fit-1.96*pred78$se.fit, 
+                           yend=pred78$fit+1.96*pred78$se.fit), size=1,color="red") + 
+  scale_x_continuous(breaks=seq(0,100,by=6))+ 
+  scale_y_continuous(breaks=seq(0,1,by=.1))
+
+
+```
+
+
+::: { .SPSS }
+
+For **SPSS Users**
+
+Add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the analysis again and let SPSS save the predicted value of the mean response and its lower and upper bounds.
+
+
+:::
+
+ 
+
+d.	Fit a Poisson model to the data, with and without a correction for overdispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer?
+
+
+
+
