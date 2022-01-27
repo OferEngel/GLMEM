@@ -122,9 +122,9 @@ ggplot(d, aes(x=height, y=pemax)) +
 ```
 ```{r cf-models, include=FALSE}
 
-mdl.w <- lm(pemax~height, data=d )
+mdl.h <- lm(pemax~height, data=d )
 predict(mdl, data.frame(height=150), interval="confidence")
-mdl.h <- lm(pemax~weight, data=d )
+mdl.w <- lm(pemax~weight, data=d )
 mdl.hw <- lm(pemax~height+weight, data=d )
 modelsummary(list(mdl.w, mdl.h, mdl.hw), stars=TRUE)
 

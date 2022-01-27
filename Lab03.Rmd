@@ -1,0 +1,245 @@
+---
+title: "GLME: Lab 3"
+#author: "Ofer Engel"
+output: html_document
+---
+
+<style>
+.column-left{
+  float: left;
+  width: 60%;
+  text-align: left;
+}
+.column-right{
+  float: right;
+  width: 40%;
+  text-align: right;
+  font-size: 10px;
+}
+
+.column-right-text-left{
+  float: right;
+  width: 40%;
+  text-align: left;
+}
+
+.column-full{
+  float: none;
+  width: 100%;
+  text-align: left;
+}
+
+.RUsers {
+  padding: 1em;
+  background: aliceblue;
+  color: black;
+}
+
+
+
+.SPSS {
+  padding: 1em;
+  background: whitesmoke;
+  color: black;
+}
+
+.center {
+  text-align: center;
+}
+
+</style>
+
+```{r setup, include=FALSE}
+
+knitr::opts_chunk$set(echo = FALSE)
+knitr::opts_chunk$set(message = FALSE)
+knitr::opts_chunk$set(include = FALSE)
+knitr::opts_chunk$set(eval = FALSE)
+
+
+
+library(knitr)
+library(tidyverse)
+library(lme4)
+library(foreign)
+library(modelsummary)
+library(janitor)
+library(kableExtra)
+library(broom)
+library(emo)
+
+```
+
+
+
+For testing, use $\alpha=0.05$ unless otherwise specified. Datsets can be found under our [shared drive](https://bit.ly/3puop3I). Please try to do all three exercises (but if it is too hard, it is ok to choose only two `r emo::ji("victory")`).
+
+# Exercise 1 
+
+In this exercise, you will replicate some of the analyses on the measurements of measurements of submandibular gland, practicing  the use of a random interaction term.
+
+The file `practical3_meanrightvolume.sav` contains  data similar to the data shown in the  lecture, only this time, we consider the right hand side mean organ volumes. We are interested in answering the research question: "Do the oncologist measure the same volume?"
+
+a. Reproduce the  plot below, where the mean volumes are presented on the y-axis, oncologists on the x-axis and the lines grouped and color coded by subject. Comment on your findings: do the measurements vary from one oncologist to the other, when measuring the same subject? Is the variability of measurements between oncologists more or less stable? Or does the variability depend on the patient (some patients for whom  oncologists tend to agree with one another, others for whom they disagree)?  
+
+```{r load-data-vol}
+d <- read.spss("data/practical3_meanrightvolume.sav", to.data.frame = TRUE) %>% 
+  mutate(Subject=factor(Subject))
+
+ggplot(d, aes(y=Volume_mean, x=Oncologist, color=Subject)) + geom_point() +   geom_line() + scale_x_continuous(breaks=1:6) +
+  labs(y="volume") +  
+  theme(legend.position =  "none")
+
+
+```
+
+
+::: { .SPSS }
+For **SPSS Users**
+
+You can either use the scatter plot under `Graphs > Legacy dialogs` (and double clicking to `connect the dots per subject`), or the `Chart builder` (again, double clicking to `connect the dots per subjects`)
+
+:::
+
+
+
+
+b. Estimate the two-way ANOVA model including a random effect for subjects and the  fixed effects for the oncologist. Are there significant differences between the oncologists in terms of how they measure subjects? What are the mean volumes estimated by the model for each of the oncologists? How large is the estimated variance in volumes (between subjects variance, $\sigma_s^2$)? How large is the estimated variation between measurements (residual variance $\sigma_r^2$)? What is the correlation between two measurements within one subject (aka the interclass correlation coefficient, or ICC $\frac{\sigma_s^2}{\sigma_s^2+\sigma_r^2}$) ? 
+
+
+::: { .SPSS }
+For **SPSS Users**
+
+Use  `Analyze > Mixed Models > Linear` in SPSS to estimate the two-way ANOVA model including a random effect for subjects and the effect of oncologist fixed
+SPSS-users: do not forget to check  `Parameter estimates for fixed effects` and `Tests for covariance parameters` under `Statistics`.
+
+:::
+
+
+::: { .RUsers }
+For **R Users**
+
+Make sure the concerning variables are treated as categorical in your model by using the `factor` function. 
+
+:::
+
+```{r randomeffect-oncologist}
+library(lmerTest)
+d1 <- d %>% mutate(Oncologist=as.factor(Oncologist))
+mdl <- lmer(Volume_mean ~ 1 + Oncologist + (1| Subject) ,
+                     data=d1, REML=T)
+summary(mdl)
+
+# For the Type III tests of fixed effects:
+anova(mdl)
+
+# Type three F test for fixed effects shows a significant effect for Oncologist.  R chooses the first oncologist as reference, so the intercept represents estimated mean volume for oncologist 1 to be 11365.8 mm2. For oncologist 2, it is 2235 lower: 9131 mm2, for 3 11033 mm2, for 4 10757 mm2 and for oncologist  5  9332 mm2.
+# To calculate the  the ICC for the model for the left hand side: the estimated variances are as follows
+v <- VarCorr(mdl)
+as.data.frame(v)$vcov
+# Calculate the sigma_s^2 divided by the sum yields 0.706, meaning that about 71% of the variance in the outcome is explained by the difference between the subjects
+
+
+```
+
+
+
+c. We will now investigate whether the effect for oncologists would change from subject to subject. We are going to do the same for the right hand side organs. To do this, we now need the complete data with multiple measurements per subject and oncologist, `practical3_rightvolumes.sav`. Take a look at the data and build the model to answer this question. Compare the model with and without  an interaction effect between oncologist and subject. Use the [likelihood ratio test (LRT)](https://www.youtube.com/watch?v=Tn5y2i_MqQ8) to compare between the two nested models: the model with and without interaction term, using the same data set.
+
+
+
+::: { .RUsers }
+For **R Users**
+
+The model you want to inspect (with the interactions) looks like the following: 
+`lmer(Volume ~ 1 + Oncologist + (1| Subject) + (1|Subject:Oncologist),data=d, REML=T)`
+
+Make sure that the `Oncologist` and `Subject` variables are defined as factors in R. To run the LRT, you need to calculate the difference between $2\cdot logLik$ of the two models, $\Delta$. This difference in twice the log likelihood is asymptotically distributed like $\chi^2$, whose degrees of freedom equals to the difference between the two models, in this case it is equal to one. To calculate the p-value associated with the null hypothesis (that there is no difference between the two models), you would calculate the probability of `pchisq($\Delta$, df=1, lower.tail=FALSE)`. If you reject the null hypothesis, you would conclude that you have compelling evidence that there is a different effect of oncologists when comparing one subject to the other. If the p-value is large, you would conclude that there is no evidence for a changing oncologist effect for different subjects. 
+
+:::
+
+```{r interaction}
+
+# Using the more elaborate data set, the model with interaction term for oncologists and subjects (created by Oncologist*Subjects) is:
+d <- read.spss('data/practical3_rightvolumes.sav',
+                       to.data.frame=TRUE, 
+               use.value.labels=FALSE) %>% 
+  mutate(Subject = as.factor(Subject), 
+         Oncologist = as.factor(Oncologist))
+ 
+mdl     <- lmer(Volume ~ 1 + Oncologist + (1| Subject), 
+                   data=d, REML=T)
+mdl.int <- lmer(Volume ~ 1 + Oncologist + (1| Subject) 
+                             + (1|Subject:Oncologist), 
+                   data=d, REML=T)
+
+mdl.onc.subj <- lmer(Volume ~ 1 +  (1| Subject) 
+                             + (1|Oncologist), 
+                   data=d, REML=T)
+
+summary(mdl.int)
+confint(mdl.int)
+
+modelsummary(list(mdl, mdl.int), stars=T)
+
+```
+
+
+
+
+# Exercise 2
+
+In this exercise, you will  use  mixed effects models in an animal study examining the effect of glucoses injection on lipid absorption in various organs. Ten  mice are randomly assigned to two groups. One group receives an injection of glucoses, the other does not (control group). Next, the absorption of radioactive lipids is measured in different organs and in blood plasma (some measurements were repeated). You will find the dataset in the file `practical3_lipidabs.sav`. 
+
+a. We first ignore glucose treatment, and address the following research question  "Does lipid absorption differ between organs?". For this, we need to fit the model with fixed effects for organ,  and random effect for each mouse. In the first instance, you want to write down the composite model specification (the entire equation with the random effects plugged into the equation of the response variable).
+
+
+$$
+
+Y_{ij}=\beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij}  \\
+
+\beta_{0i}=\gamma_{00}+a_{0i} \\
+
+\beta_{1i}=\gamma_{10}+a_{1i} 
+
+$$
+Where: 
+$Y_{ij}$ :  is the $j^{th}$ log_lipid measurement for the $i^{th}$ mouse (ln_abs)
+$\gamma_{00}$  : overall mean lipid absorption (for all mice)
+$\gamma_{10}$  : overall mean organ effect (for all mice)
+$a_{0i}$ :  the random effect for the  $i^{th}$ mouse, $a_{0i} \sim N(0,s_{s0}^2)$
+$a_1i$ :  the random organ effect for the  $i^{th}$ mouse, $ai1 ~ N(0,s_{s1}^2)$
+$e_{ij}$ : the residuals $e_{ij} \sim N(0,s_r^2)$ 
+
+With $\beta_{0i}$: being the  "true" mean lipid absorption per mouse and $\beta_{1i}$ being the  "true" effect of organ per mouse.
+
+
+Answer: 
+$$
+Y_{ij}=\gamma_{00}+a_{0i}+ (\gamma_{10}+a_{1i} )\cdot X^{(organ)}_{ij} +e_{ij}  \\
+
+$$
+
+
+
+```{r}
+
+d <- read.spss("data/practical3_lipidabs.sav", to.data.frame = TRUE)
+
+```
+
+
+b.	Select the control group only (no glucose treatment). As absorption  is skewed, we use the log transformation (`ln_abs`) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ? 
+
+
+c.	Write down and fit the model without the interaction effect for mouse and organ. Interpret the results. 
+We now consider the complete data set. We investigate the effect of glucose injection on lipid absorption (both on overall average (through intercept $\beta_{0i}$) as well as by organ effect (``slope’’ β_1i) ) by fitting this model:
+Y_ij=β_0i+β_1i (organ)_ij+e_ij
+β_0i=γ_00+γ_01 (glucose)_i+a_0i
+β_1i=γ_10+γ_11 (glucose)_i
+(based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect a_1ifor the slope β_1i)
+	Write down the composite model based on the equations above.
+	 Fit this model. Based on this model, does glucose have an effect on lipid absorption? 
+
+
+

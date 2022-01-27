@@ -115,8 +115,16 @@ tribble(
 
 a. Perform a linear regression of the variable `BWT` (birth weight) on the explanatory variables `SMOKE` and `LWT` (weight of the mother during last menstrual period), and interpret the coefficient associated with the variable `LWT`. 
 
+<div class="column-right-text-left">
 
+```{r cmpr-image, eval=TRUE, include=TRUE}
 
+include_graphics("images/slide59.png")
+
+```
+
+When comparing between the two methods, notice we expect the  estimates to be exactly the same but the variance components (standard errors, confidence intervals etc...) should be different!
+</div>
 
 b. Compare these results with the results of an analysis in `GzLM` (SPSS users) or `glm(...)` (R users) in which you define the distribution of the response variable as normal (let the software create confidence intervals for the regression coefficients). Do the results agree? Where do they differ and *why*? In your answer, please comment on the similarities and difference in the diagnostics when comparing the two  models. 
 
@@ -131,7 +139,7 @@ use `m <- lm(...)` to evaluate the the model and `confint(m)` for the confidence
 
 c. What are the degrees of freedom associated with the two deviance indicators? Explain why these indicators have those values.  
 
-d. BONUS QUESTION: Calculate the deviance for the following: the null model, the residual deviance for the model in part a and for the model in part b. 
+d. BONUS QUESTION: Calculate the deviance for the following: the null model, the residual deviance for the model in *part a* and for the model in *part b*. 
 
 ::: { .RUsers }
 For **R Users**!
@@ -180,9 +188,8 @@ sum((residuals(m1))^2)
 
 
 
-a.	Make a cross tabulation (aka contingency table) of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well. What do you conclude from the table about the association between smoking and low birth weight?  
+e.	Make a cross tabulation (aka contingency table) of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well. What do you conclude from the table about the association between smoking and low birth weight?  
 
-BONUS: If you use `xtabs` in R and the formula `~ SMOKE + LOW`, you can run a chi-square test by typing `summary(xtabs(...))`. Try to run this and interpret the results!
 
 
 ::: {#crosstab .SPSS }
@@ -198,7 +205,9 @@ For **SPSS Users**
 
 For **R Users**
 
-You could either use the `xtable` command for this, or use the functions from the `janitor` library, namely `tabyl`, `adorn_percentages`,  `adorn_pct_formatting` and `adorn_title`. 
+If you use `xtabs` in R and the formula `~ SMOKE + LOW`, you can run a chi-square test by typing `summary(xtabs(...))`. Try to run this and interpret the results!
+
+Alternatively, you could use the functions from the `janitor` library, namely `tabyl`, `adorn_percentages`,  `adorn_pct_formatting` and `adorn_title`. 
 
 
 
@@ -233,7 +242,7 @@ summary(xt)
 ```
 
 
-b.	Perform a logistic regression of the variable LOW on the explanatory variable SMOKE by building a Generalized linear model, using the logit link function. Take LOW as the dependent and SMOKE as predictor. What is the interpretation of the coefficient of SMOKE? Compare your results with the results of the two models you created in the previous exercise. Pay attention to similarities and differences in the diagnostics of the two types of models. Which (if any) of the three models is most informative or useful? 
+f.	Perform a logistic regression of the variable LOW on the explanatory variable SMOKE by building a Generalized linear model, using the logit link function. Take LOW as the dependent and SMOKE as predictor. What is the interpretation of the coefficient of SMOKE? Compare your results with the results of the two models you created in the previous exercise. Pay attention to similarities and differences in the diagnostics of the two types of models. Which (if any) of the three models is most informative or useful? 
 
 ```{r}
 
@@ -265,6 +274,10 @@ You then print out the model using the summary and the dispersion argument as fo
 
 To calculate the predicted values, use the `predict`  function and add the new data you want to predict in the function call. Make sure you use the correct type for the prediction (`response`) and pass the dispersion you are interested in. When evaluating the 95% confidence interval, use the formula $\hat{Y}\pm1.96*SE$.
 
+Your code may look as follows: 
+
+`predict.glm(qmdl, data.frame(Age=78), type="response", se.fit=TRUE)`
+
 :::
 
 
@@ -283,6 +296,8 @@ scale_d <- deviance(mdl)/df.residual(mdl)
 summary(mdl, dispersion=scale_d)
 
 
+
+
 ```
 
 
@@ -292,6 +307,7 @@ b.	Predict the 95% CI for the probability to have Dupuytren at the age of 78, ac
 xseq <- seq(25,100,by=1)
 pred <- predict.glm(mdl, data.frame(Age=xseq), type="response", se.fit=TRUE) 
 qpred <- predict.glm(qmdl, data.frame(Age=xseq), type="response", se.fit=TRUE)
+
 pred78 <- predict.glm(qmdl, data.frame(Age=78), 
                       type="response", 
                       se.fit=TRUE)

@@ -153,9 +153,38 @@ df %>%
 d <- read.spss("data/practical2_dupuytren.sav", 
                to.data.frame = TRUE) 
 
+
+
 ml.mdl <- glm(cbind(Count, TOTAL-Count)~Age, d, family=binomial)
 summary(ml.mdl)
 
+pois.mdl <- glm(Count ~ offset(log(TOTAL)) + Age, family=poisson, data=d)
+summary(pois.mdl)
+sum(residuals(pois.mdl, type="pearson")^2)/pois.mdl$df.residual
+pois.mdl$deviance/pois.mdl$df.residual
+mean(d$Count/d$TOTAL)
+var(d$Count/d$TOTAL)
+
+
+library(MASS) # for Insurance dataset
+n <- 10000
+x <- rpois(n,lambda=runif(n,3,5))
+x <- rpois(n,lambda=4)
+
+x <- rbinom(n, 10, p=.5)
+x <- rbinom(n, 10, p=runif(n,.3,.7))
+
+10*.5*.5
+var(x)
+mean(x)
+
+
+# modelling the claim rate, with exposure as a weight
+# use quasipoisson family to stop glm complaining about nonintegral response
+glm(Claims/Holders ~ District + Group + Age,
+    family=quasipoisson, data=Insurance, weights=Holders) %>% summary()
+glm(Claims ~ District + Group + Age + offset(log(Holders)),
+    family=poisson, data=Insurance) %>% summary()
 # Likelihood Ration Test (LRT) is a Chi-square test, 
 # Comparing our model (residuals) to the null model
 # In this case the deviance of our model is 982.23, 
@@ -299,6 +328,9 @@ ggplot(glands, aes(x=Oncologist, y=meanvolume, color=Subject)) +
 
 glands$fct.onc <- factor(glands$Oncologist) %>% 
   fct_relevel("5")
+
+
+
 glands$fct.sub <- factor(glands$Subject)
 
 
@@ -423,6 +455,68 @@ d %>% mutate(rate=admit/applications) %>%
 xtabs(~dept+applicant.gender, data=d)
 
 
+x <- rbinom(10000, 10, 0.40)
+mean(x)
+sd(x)
+sqrt(10*.4*.6)
 
-  
+# Lab 03
+# 
 
+
+d <- read.spss("data/_lecture alcoholpp.sav", to.data.frame = TRUE) 
+# Model A
+# i is the person (level 2), j is the time point (level 1)
+# Y_ij = b_0i + e_ij, e_ij \sim N(0, sigma_r)
+# b_0i = beta_00 + a_0i, a_0i \sim N(0, tau_0)
+# estimate: beta_00, sigma_s and sigma_r
+# ICC = tau_0^2/(tau_0^2 + sigma_r^2)
+
+ma <- lmer(alcuse ~ 1 + ( 1 | id ), data=d, REML=TRUE)
+summary(ma)
+# 0.5731/(0.5731 + 0.5617 ) = 50.5%
+# An estimated 51% of alcohol use is 
+# Variation attributable to differences between subjects 
+# is about 50.5% 
+
+
+
+# Model B
+# i is the person (level 2), j is the time point (level 1)
+# Y_ij = b_0i + b_1i X_time + e_ij, where e_ij \sim N(0,sigma_r^2)
+# b_0i = b_00 + a_0i, where a_0i \sim N(0,tau_0^2)
+# b_1i = b_10 + a_1i, where a_1i \sim N(0,tau_1^2)
+# estimate fixed effects: b_00 and b_10
+# estimate random effects: tau_0, tau_1
+
+mb <- lmer(alcuse ~ 1 + age_14 + ( 1 + age_14 | id ), 
+           data=d, REML=TRUE)
+summary(mb)
+
+# estimate fixed effects: b_00=0.65130 and b_10=0.27065    
+# estimate random effects: 
+# tau_0 = 0.6355, tau_1 = 0.1552, sigma_r^2 = 0.3373   
+
+
+# Model C
+# i is the person (level 2), j is the time point (level 1)
+# Y_ij = b_0i + b_1i X_time  + b_2i X_coa + e_ij, where e_ij \sim N(0,sigma_r^2)
+# b_0i = b_00 + a_0i, where a_0i \sim N(0, tau_0^2)
+# b_1i = b_10 + a_1i, where a_1i \sim N(0, tau_1^2)
+# b_2i = b_20 + a_2i, where a_2i \sim N(0, tau_2^2)
+# estimate fixed effects: b_00, b_10 and b_20
+# estimate random effects: tau_0, tau_1 and tau_2
+
+mc <- lmer(alcuse ~ 1 + age_14 + coa + ( 1 + age_14  + coa | id ), 
+           data=d, REML=TRUE)
+summary(mb)
+
+
+
+x <- rnorm(10)
+y <- rnorm(10) + x
+m1 <- lm(y~x) 
+m2 <- glm(y~x) 
+
+confint(m1)
+confint(m2)
