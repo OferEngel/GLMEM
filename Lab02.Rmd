@@ -14,13 +14,13 @@ output: html_document
   float: right;
   width: 40%;
   text-align: right;
-  font-size: 10px;
 }
 
 .column-right-text-left{
   float: right;
   width: 40%;
   text-align: left;
+  font-size: 10px;
 }
 
 .column-full{
@@ -187,7 +187,6 @@ sum((residuals(m1))^2)
 ```
 
 
-
 e.	Make a cross tabulation (aka contingency table) of the variables LOW and SMOKE; print the percentages of LOW within the SMOKE-groups in your cross tabulation as well. What do you conclude from the table about the association between smoking and low birth weight?  
 
 
@@ -257,6 +256,16 @@ summary(m3)
 
 # Exercise 2
 
+
+<div class="column-right-text-left">
+
+```{r overdisp-image, eval=TRUE, include=TRUE}
+
+include_graphics("images/overdispersion.jpg")
+
+```
+To know whether you may be dealing with over-dispersion, you want to estimate the scales, $\hat{\phi}_P, \hat{\phi}_D$. estimating the scale, if these measures are large, this indicates a lack of fit that could be sometimes corrected by scaling your results accordingly.
+</div>
 
 This exercise further explores the Dupuytren data we already encountered in the lectures. It builds and compares various models. You will need to use the file `practical2_dupuytren.sav`. 
 

@@ -287,13 +287,13 @@ $(document).ready(function () {
   float: right;
   width: 40%;
   text-align: right;
-  font-size: 10px;
 }
 
 .column-right-text-left{
   float: right;
   width: 40%;
   text-align: left;
+  font-size: 10px;
 }
 
 .column-full{
@@ -469,6 +469,9 @@ Baby’s birth Weight in Grams
 </div>
 <div id="exercise-2" class="section level1">
 <h1>Exercise 2</h1>
+<div class="column-right-text-left">
+<p><img src="images/overdispersion.jpg" width="512" /> To know whether you may be dealing with over-dispersion, you want to estimate the scales, <span class="math inline">\(\hat{\phi}_P, \hat{\phi}_D\)</span>. estimating the scale, if these measures are large, this indicates a lack of fit that could be sometimes corrected by scaling your results accordingly.</p>
+</div>
 <p>This exercise further explores the Dupuytren data we already encountered in the lectures. It builds and compares various models. You will need to use the file <code>practical2_dupuytren.sav</code>.</p>
 <ol style="list-style-type: lower-alpha">
 <li>Is the probability of having Dupuytren related to Age? Fit a Binomial model with logistic link function compare your results with the results shown in the recorded lecture. Compare the model with and without correcting for over-dispersion. To correct for over dispersion, estimate the scale in two ways: first, using Pearson’s chi-square <span class="math inline">\(\hat{\phi}_P=\frac{\chi^2}{N-p}\)</span> and second, using the deviance <span class="math inline">\(\hat{\phi}_D=\frac{D}{N-p}\)</span> (see slide 103.)</li>
