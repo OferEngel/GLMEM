@@ -82,7 +82,7 @@ The file `practical3_meanrightvolume.sav` contains  data similar to the data sho
 
 a. Reproduce the  plot below, where the mean volumes are presented on the y-axis, oncologists on the x-axis and the lines grouped and color coded by subject. Comment on your findings: do the measurements vary from one oncologist to the other, when measuring the same subject? Is the variability of measurements between oncologists more or less stable? Or does the variability depend on the patient (some patients for whom  oncologists tend to agree with one another, others for whom they disagree)?  
 
-```{r load-data-vol}
+```{r load-data-vol, include=TRUE,eval=TRUE}
 d <- read.spss("data/practical3_meanrightvolume.sav", to.data.frame = TRUE) %>% 
   mutate(Subject=factor(Subject))
 
