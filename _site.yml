@@ -15,6 +15,8 @@ navbar:
           href: Lab01v01.html
         - text: "Lab 2"
           href: Lab02.html
+        - text: "Lab 3"
+          href: Lab03.html
 output:
   html_document:
     theme: flatly
