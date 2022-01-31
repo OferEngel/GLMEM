@@ -151,12 +151,12 @@ c. We will now investigate whether the effect for oncologists would change from 
 ::: { .RUsers }
 For **R Users**
 
-The model you want to inspect (with the interactions) looks like the following: 
+The model with the interactions looks like the following: 
 `lmer(Volume ~ 1 + Oncologist + (1| Subject) + (1|Subject:Oncologist),data=d, REML=T)`
 
 Make sure that the `Oncologist` and `Subject` variables are defined as factors in R. To run the LRT, you need to calculate the difference between $2\cdot logLik$ of the two models, $\Delta$. To carry out the likelihood ratio test (LRT), we take advantage of the fact that this difference  is asymptotically distributed like $\chi^2$, whose degrees of freedom equals to the difference between the two models, in this case it is equal to one. 
 
-To calculate the p-value associated with the null hypothesis (that there is no difference between the two models), you would calculate the probability of `pchisq($\Delta$, df=1, lower.tail=FALSE)`. If you reject the null hypothesis, you would conclude that you have compelling evidence that there is a different effect of oncologists when comparing one subject to the other. Failing to reject the null, you would conclude that there is no evidence for a changing oncologist effect for different subjects. 
+To calculate the p-value associated with the null hypothesis (that there is no difference between the two models), you would calculate the probability of `pchisq(`$\Delta$`, df=1, lower.tail=FALSE)`. If you reject the null hypothesis, you would conclude that you have compelling evidence that there is a different effect of oncologists when comparing one subject to the other. Failing to reject the null, you would conclude that there is no evidence for a changing oncologist effect for different subjects. 
 
 :::
 
@@ -202,11 +202,7 @@ Y_{ij} &= \beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij} \\
 \beta_{1i} &= \gamma_{10}+a_{1i}
 \end{aligned}
 
-<!-- $Y_{ij}=\beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij}$ -->
 
-<!-- $\beta_{0i}=\gamma_{00}+a_{0i}$ -->
-
-<!-- $\beta_{1i}=\gamma_{10}+a_{1i}$ -->
 
 \newline
 \newline
@@ -247,6 +243,7 @@ summary(m1)
 
 # fixed effects for organ and random effect for each mouse
 m2 <- lmer(ln_abs ~ 1 + organ + (1|mouse), data=d, REML=TRUE)
+summary(m2)
 
 m3 <- lmer(ln_abs ~ 1 + organ + (1+organ|mouse), data=d, REML=TRUE)
 summary(m3)
@@ -254,12 +251,54 @@ summary(m3)
 ```
 
 
+
+
 b.	Select the control group only (no glucose treatment). As absorption  is skewed, we use the log transformation (`ln_abs`) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ? 
+
+
+```{r}
+
+
+d <- read.spss("data/practical3_lipidabs.sav", to.data.frame = TRUE) %>% mutate(mouse=factor(mouse), 
+                          mutate(organ=factor(organ)))
+
+m1 <- lmer(ln_abs ~ 1 +  (1|mouse), 
+           data=d %>% filter(glucosis == 0), REML=TRUE)
+summary(m1)
+
+m2.b <- lmer(ln_abs ~ 1 + organ + (1|mouse) + (1|mouse:organ),  
+           data=d %>% filter(glucosis == 0), REML=TRUE)
+summary(m2.b)
+
+```
+
+Note: based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect $a_{1i}$ for the slope $\beta_{1i}$). 
 
 
 c.	Write down and fit the model without the interaction effect for mouse and organ. Interpret the results. 
 
 
+<!-- \begin{aligned} -->
+<!-- Y_{ij} &= \gamma_{00}+a_{0i}+\gamma_{10}\cdot X^{(organ)}_{ij} +e_{ij} \end{aligned} -->
+
+
+
+```{r}
+
+mc.1 <- lm(ln_abs ~ 1 + organ ,  
+           data=d %>% filter(glucosis == 0))
+
+
+mc.2 <- lmer(ln_abs ~ 1 + organ + (1|mouse) ,  
+           data=d %>% filter(glucosis == 0), REML=TRUE)
+summary(mc.2)
+anova(mc.2)
+
+
+```
+
+\newline
+\newline 
 
 We now consider the complete data set. We investigate the effect of glucose injection on lipid absorption (both on overall average (through intercept $\beta_{0i}$) as well as by organ effect (slope: $\beta_{1i}$) ) by fitting this model where: 
 
@@ -272,9 +311,21 @@ Y_{ij}&=\beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij}  \\
 
 
 
-Note: based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect $a_{1i}$ for the slope $\beta_{1i}$). 
+
 
 d. Write down the composite model based on the equations above. Fit this model. Based on this model, does glucose have an effect on lipid absorption? 
 
 
+
+\begin{aligned}
+Y_{ij}&=\gamma_{00}+\gamma_{01}\cdot X^{(glucosis)}_{i}+a_{0i}+(\gamma_{10}+\gamma_{11}\cdot X^{(glucosis)}_{i})\cdot X^{(organ)}_{ij} +e_{ij}  
+\end{aligned}
+
+
+```{r}
+m.d <- lmer(ln_abs ~ 1 + glucosis + organ + organ*glucosis + (1|mouse), d)
+
+anova(m.d)
+
+```
 

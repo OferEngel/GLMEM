@@ -462,10 +462,37 @@ sqrt(10*.4*.6)
 
 # Lab 03
 # 
+library(foreign)
+library(tidyverse)
+library(lme4)
+library(sjstats)
+
+d <- read.spss("data/_lecture alcoholpp.sav", 
+               to.data.frame = TRUE) 
+
+ggplot(d, 
+       aes(y=alcuse, x=age_14, color=factor(coa))) + 
+  geom_smooth(method="lm", se=FALSE, 
+              aes(group=factor(id)),  
+              linetype="longdash") +  
+  geom_smooth(method="lm", se=FALSE, size=3) + 
+  theme(legend.position = "none") + theme_minimal() 
 
 
-d <- read.spss("data/_lecture alcoholpp.sav", to.data.frame = TRUE) 
+
+ggplot(d %>% filter(coa==1), 
+       aes(y=alcuse, x=age_14)) + 
+  geom_smooth(method="lm", se=FALSE, 
+              aes(group=factor(id)), size=.5) +  
+  geom_smooth(method="lm", se=FALSE, color="black") + 
+  theme(legend.position = "none")
+
+
 # Model A
+# 
+# One intercept for everyone 
+# One random variable intercept
+# 
 # i is the person (level 2), j is the time point (level 1)
 # Y_ij = b_0i + e_ij, e_ij \sim N(0, sigma_r)
 # b_0i = beta_00 + a_0i, a_0i \sim N(0, tau_0)
@@ -474,10 +501,11 @@ d <- read.spss("data/_lecture alcoholpp.sav", to.data.frame = TRUE)
 
 ma <- lmer(alcuse ~ 1 + ( 1 | id ), data=d, REML=TRUE)
 summary(ma)
-# 0.5731/(0.5731 + 0.5617 ) = 50.5%
+icc(ma)
+performance::icc(ma)
+# conclusion: 0.5731/(0.5731 + 0.5617 ) = 50.5%
 # An estimated 51% of alcohol use is 
 # Variation attributable to differences between subjects 
-# is about 50.5% 
 
 
 
@@ -492,6 +520,8 @@ summary(ma)
 mb <- lmer(alcuse ~ 1 + age_14 + ( 1 + age_14 | id ), 
            data=d, REML=TRUE)
 summary(mb)
+modelsummary(list(ma,mb), stars=TRUE)
+performance::icc(mb)
 
 # estimate fixed effects: b_00=0.65130 and b_10=0.27065    
 # estimate random effects: 
@@ -507,11 +537,26 @@ summary(mb)
 # estimate fixed effects: b_00, b_10 and b_20
 # estimate random effects: tau_0, tau_1 and tau_2
 
-mc <- lmer(alcuse ~ 1 + age_14 + coa + ( 1 + age_14  + coa | id ), 
+mc <- lmer(alcuse ~ 1 + age_14 + coa + age_14*coa + ( 1 + age_14 | id ), 
            data=d, REML=TRUE)
-summary(mb)
+summary(mc)
 
 
+mc.1 <- lmer(alcuse ~ 1 + age_14 + coa + ( 1 + age_14 | id ), 
+           data=d, REML=TRUE)
+summary(mc.1)
+
+2*logLik(mc)- 
+2*logLik(mc.1)
+pchisq(631.923 - 629.78, df=1, lower.tail = FALSE)
+# Doesnt look significant difference with and 
+# without interaction. In other words, there is no evidence
+# that the coa has a different impact on different ages. 
+
+
+md <- lm(alcuse ~ coa + age_14 + age_14*coa, d)
+summary(md)
+modelsummary(list(md, mc), stars=TRUE)
 
 x <- rnorm(10)
 y <- rnorm(10) + x
@@ -520,3 +565,116 @@ m2 <- glm(y~x)
 
 confint(m1)
 confint(m2)
+
+
+
+
+# Day 4
+# 
+
+
+d <- read.spss("data/_lecture alcoholpp.sav", 
+               to.data.frame = TRUE) %>%
+  mutate(wave=factor(age_14))
+                                                                                
+library(nlme)
+mdl <- gls(alcuse ~ wave+ coa + wave*coa,
+    data = d,
+    correlation = corSymm(form= ~1|id),
+    weights =varIdent(form= ~1| wave))
+summary(mdl)
+
+
+
+
+library(rethinking)
+library(lme4)
+data("reedfrogs")
+d <- reedfrogs
+my.var <- function(x) return(var(x)*(length(x)-1)/length(x))
+
+
+nj <- 7
+ni <- 100
+j <- 1:nj
+mu_j <- rnorm(nj, 100, 20)
+
+
+mu_ij <- rep(mu_j,ni) 
+ij <- factor(rep(j,ni))
+y_ij <- rnorm(ni*nj, mu_ij, 10)
+
+
+
+
+data.frame(y_ij, ij) %>% group_by(ij) %>% 
+  summarise(xbar=mean(y_ij), sd=sd(y_ij)) 
+
+data.frame(y_ij, ij) %>% group_by(ij) %>% 
+  summarise(Y_.j=mean(y_ij), sd=sd(y_ij)) %>% rename(group=ij) %>% 
+  kbl() %>%
+  kable_paper("hover", full_width = F) 
+
+data.frame(y_ij, ij) %>% group_by(ij) %>% 
+  summarise(xbar=mean(y_ij), sd=sd(y_ij)) %>% pull(xbar)->xbar
+
+
+
+
+# The variance between the groups
+var(rep(xbar,ni))
+sum((rep(xbar,ni)-mean(rep(xbar,ni)))^2)/(ni*nj-1)
+
+var(xbar)
+sum((xbar-mean(xbar))^2)/(nj-1)
+
+ni*sum((xbar-mean(xbar))^2)/(ni*nj-1)
+
+# The variance within each group
+var(y_ij - rep(xbar,ni))
+sum((y_ij - rep(xbar,ni))^2)/(ni*nj-1)
+
+
+
+# The total variance
+var(y_ij)
+sum((y_ij - mean(y_ij))^2)/(ni*nj-1)
+
+
+
+
+# sigma_s2
+var(xbar)
+
+
+mdl.re <- lmer(y_ij ~  1 + (1|ij))
+summary(mdl.re)
+
+y.hat <- predict(mdl.re)
+var(y.hat)
+table(y.hat)
+
+
+a  <-3.5 # average morning wait time
+b <-(-1) # average difference afternoon wait time
+sigma_a <-1# std dev in intercepts
+sigma_b <-0.5#std dev in slopes
+rho <-(-0.7)#correlation between intercepts and slopes
+
+
+
+
+
+d <- read.spss("data/_lecture Dupuytren.sav", 
+               to.data.frame = TRUE) %>% 
+  mutate(Study=factor(Study))
+
+
+
+library(gee)
+mdl <- gee(cbind(Count, TOTAL-Count)~Age, id=Study, 
+           corstr = "exchangeable", 
+           scale.fix=TRUE, 
+           family=binomial, 
+           data=d)
+summary(mdl)

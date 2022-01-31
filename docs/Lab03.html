@@ -256,6 +256,9 @@ $(document).ready(function () {
     <li>
       <a href="Lab03.html">Lab 3</a>
     </li>
+    <li>
+      <a href="Lab04.html">Lab 4</a>
+    </li>
   </ul>
 </li>
       </ul>
@@ -348,9 +351,9 @@ $(document).ready(function () {
 </ol>
 <div class="RUsers">
 <p>For <strong>R Users</strong></p>
-<p>The model you want to inspect (with the interactions) looks like the following: <code>lmer(Volume ~ 1 + Oncologist + (1| Subject) + (1|Subject:Oncologist),data=d, REML=T)</code></p>
+<p>The model with the interactions looks like the following: <code>lmer(Volume ~ 1 + Oncologist + (1| Subject) + (1|Subject:Oncologist),data=d, REML=T)</code></p>
 <p>Make sure that the <code>Oncologist</code> and <code>Subject</code> variables are defined as factors in R. To run the LRT, you need to calculate the difference between <span class="math inline">\(2\cdot logLik\)</span> of the two models, <span class="math inline">\(\Delta\)</span>. To carry out the likelihood ratio test (LRT), we take advantage of the fact that this difference is asymptotically distributed like <span class="math inline">\(\chi^2\)</span>, whose degrees of freedom equals to the difference between the two models, in this case it is equal to one.</p>
-<p>To calculate the p-value associated with the null hypothesis (that there is no difference between the two models), you would calculate the probability of <code>pchisq($\Delta$, df=1, lower.tail=FALSE)</code>. If you reject the null hypothesis, you would conclude that you have compelling evidence that there is a different effect of oncologists when comparing one subject to the other. Failing to reject the null, you would conclude that there is no evidence for a changing oncologist effect for different subjects.</p>
+<p>To calculate the p-value associated with the null hypothesis (that there is no difference between the two models), you would calculate the probability of <code>pchisq(</code><span class="math inline">\(\Delta\)</span><code>, df=1, lower.tail=FALSE)</code>. If you reject the null hypothesis, you would conclude that you have compelling evidence that there is a different effect of oncologists when comparing one subject to the other. Failing to reject the null, you would conclude that there is no evidence for a changing oncologist effect for different subjects.</p>
 </div>
 </div>
 <div id="exercise-2" class="section level1">
@@ -364,9 +367,6 @@ Y_{ij} &amp;= \beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij} \\
 \beta_{0i} &amp;= \gamma_{00}+a_{0i} \\
 \beta_{1i} &amp;= \gamma_{10}+a_{1i}
 \end{aligned}\]</span>
-<!-- $Y_{ij}=\beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij}$ -->
-<!-- $\beta_{0i}=\gamma_{00}+a_{0i}$ -->
-<!-- $\beta_{1i}=\gamma_{10}+a_{1i}$ -->
 <p><em>Where: </em></p>
 <p><span class="math inline">\(Y_{ij}\)</span> : is the <span class="math inline">\(j^{th}\)</span> log_lipid measurement for the <span class="math inline">\(i^{th}\)</span> mouse (ln_abs)</p>
 <p><span class="math inline">\(\gamma_{00}\)</span> : overall mean lipid absorption (for all mice)</p>
@@ -380,19 +380,26 @@ Y_{ij} &amp;= \beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij} \\
 <!-- Y_{ij}=\gamma_{00}+a_{0i}+ (\gamma_{10}+a_{1i} )\cdot X^{(organ)}_{ij} +e_{ij}  \\ -->
 <!-- $$ -->
 <ol start="2" style="list-style-type: lower-alpha">
-<li><p>Select the control group only (no glucose treatment). As absorption is skewed, we use the log transformation (<code>ln_abs</code>) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ?</p></li>
-<li><p>Write down and fit the model without the interaction effect for mouse and organ. Interpret the results.</p></li>
+<li>Select the control group only (no glucose treatment). As absorption is skewed, we use the log transformation (<code>ln_abs</code>) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ?</li>
 </ol>
+<p>Note: based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect <span class="math inline">\(a_{1i}\)</span> for the slope <span class="math inline">\(\beta_{1i}\)</span>).</p>
+<ol start="3" style="list-style-type: lower-alpha">
+<li>Write down and fit the model without the interaction effect for mouse and organ. Interpret the results.</li>
+</ol>
+<!-- \begin{aligned} -->
+<!-- Y_{ij} &= \gamma_{00}+a_{0i}+\gamma_{10}\cdot X^{(organ)}_{ij} +e_{ij} \end{aligned} -->
 <p>We now consider the complete data set. We investigate the effect of glucose injection on lipid absorption (both on overall average (through intercept <span class="math inline">\(\beta_{0i}\)</span>) as well as by organ effect (slope: <span class="math inline">\(\beta_{1i}\)</span>) ) by fitting this model where:</p>
 <span class="math display">\[\begin{aligned}
 Y_{ij}&amp;=\beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij}  \\
 \beta_{0i}&amp;=\gamma_{00}+\gamma_{01}\cdot X^{(glucosis)}_{i}+a_{0i} \\
 \beta_{1i}&amp;=\gamma_{10}+\gamma_{11}\cdot X^{(glucosis)}_{i} 
 \end{aligned}\]</span>
-<p>Note: based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect <span class="math inline">\(a_{1i}\)</span> for the slope <span class="math inline">\(\beta_{1i}\)</span>).</p>
 <ol start="4" style="list-style-type: lower-alpha">
 <li>Write down the composite model based on the equations above. Fit this model. Based on this model, does glucose have an effect on lipid absorption?</li>
 </ol>
+<span class="math display">\[\begin{aligned}
+Y_{ij}&amp;=\gamma_{00}+\gamma_{01}\cdot X^{(glucosis)}_{i}+a_{0i}+(\gamma_{10}+\gamma_{11}\cdot X^{(glucosis)}_{i})\cdot X^{(organ)}_{ij} +e_{ij}  
+\end{aligned}\]</span>
 </div>
 
 
