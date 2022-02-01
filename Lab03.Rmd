@@ -256,19 +256,37 @@ summary(m3)
 b.	Select the control group only (no glucose treatment). As absorption  is skewed, we use the log transformation (`ln_abs`) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ? 
 
 
+
+::: { .RUsers }
+For **R Users**
+
+The formula you need for the `lmer` function is as follows: \newline
+
+`ln_abs ~ 1 + organ + (1|mouse) + (1|mouse:organ)`
+
+:::
+
+
+
 ```{r}
 
 
 d <- read.spss("data/practical3_lipidabs.sav", to.data.frame = TRUE) %>% mutate(mouse=factor(mouse), 
                           mutate(organ=factor(organ)))
 
-m1 <- lmer(ln_abs ~ 1 +  (1|mouse), 
+m2.b1 <- lmer(ln_abs ~ 1 +  (1|mouse), 
            data=d %>% filter(glucosis == 0), REML=TRUE)
 summary(m1)
 
-m2.b <- lmer(ln_abs ~ 1 + organ + (1|mouse) + (1|mouse:organ),  
+
+
+m2.b2 <- lmer(ln_abs ~ 1 + organ + (1|mouse) + (1|mouse:organ),
            data=d %>% filter(glucosis == 0), REML=TRUE)
 summary(m2.b)
+
+m2.b2a <- lmer(ln_abs ~ 1 + (1|mouse) + organ +  ((1|mouse):organ), data = d, REML =T)
+
+
 
 ```
 

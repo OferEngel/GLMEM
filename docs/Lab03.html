@@ -382,6 +382,11 @@ Y_{ij} &amp;= \beta_{0i}+\beta_{1i}\cdot X^{(organ)}_{ij} +e_{ij} \\
 <ol start="2" style="list-style-type: lower-alpha">
 <li>Select the control group only (no glucose treatment). As absorption is skewed, we use the log transformation (<code>ln_abs</code>) as the outcome variable. Fit the model and interpret the results. What are the estimated (log) absorption means for each organ?</li>
 </ol>
+<div class="RUsers">
+<p>For <strong>R Users</strong></p>
+<p>The formula you need for the <code>lmer</code> function is as follows: </p>
+<p><code>ln_abs ~ 1 + organ + (1|mouse) + (1|mouse:organ)</code></p>
+</div>
 <p>Note: based on the previous model, we concluded that the organ effect does not vary across mice, hence we do not include a random effect <span class="math inline">\(a_{1i}\)</span> for the slope <span class="math inline">\(\beta_{1i}\)</span>).</p>
 <ol start="3" style="list-style-type: lower-alpha">
 <li>Write down and fit the model without the interaction effect for mouse and organ. Interpret the results.</li>

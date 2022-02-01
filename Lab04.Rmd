@@ -147,7 +147,7 @@ ggplot(d %>% na.omit(IMP) %>%  group_by(_____, _____) %>% summarize(IMP=mean(___
 
 
 
-c.	Fit a random coefficients model with a fixed quadratic time term for each treatment group. Take the covariance matrix for the intercept and slope (linear time) term unstructured. 
+c.	Fit a model with random effects for the intercept and the time effect, and fixed effects for the treatment, the time, the quadratic time and for the relevant interactions. Take the covariance matrix for the intercept and slope (linear time) term unstructured. 
 
 <!-- Create a table comparing the `-2loglikelihood` values, the `AIC`, and `BIC`. What are your conclusions? -->
 
@@ -161,7 +161,7 @@ You may choose a random effect for the intercept and for the slope of the variab
 Your model will look as follows: 
 
 \begin{aligned}
-Y_{IMP} &= b_{0i} + b_{1i}\cdot X_{time_c}+ b_2\cdot X_{time_c}^2 + b_3\cdot X_{trt}\cdot X_{time_c} + b_4\cdot X_{trt}\cdot X_{time_c}^2 + e_{ij} \\
+Y_{IMP} &= b_{0i} + b_{1i}\cdot X_{time_c}+ b_2\cdot X_{trt} + b_3\cdot X_{time_c}^2 + b_4\cdot X_{trt}\cdot X_{time_c} + b_5\cdot X_{trt}\cdot X_{time_c}^2 + e_{ij} \\
 
 b_{0i} &= \beta_{00} + a_{0i} \\
 b_{1i} &= \beta_{10} + a_{1i} 

@@ -451,7 +451,7 @@ $(document).ready(function () {
 <span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">ggplot</span>(d <span class="sc">%&gt;%</span> <span class="fu">na.omit</span>(IMP) <span class="sc">%&gt;%</span>  <span class="fu">group_by</span>(_____, _____) <span class="sc">%&gt;%</span> <span class="fu">summarize</span>(<span class="at">IMP=</span><span class="fu">mean</span>(_____))) <span class="sc">+</span> </span>
 <span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  <span class="fu">geom_line</span>(<span class="fu">aes</span>(<span class="at">y=</span>_____, <span class="at">x=</span>_____, <span class="at">color=</span>_____))</span></code></pre></div>
 <ol start="3" style="list-style-type: lower-alpha">
-<li>Fit a random coefficients model with a fixed quadratic time term for each treatment group. Take the covariance matrix for the intercept and slope (linear time) term unstructured.</li>
+<li>Fit a model with random effects for the intercept and the time effect, and fixed effects for the treatment, the time, the quadratic time and for the relevant interactions. Take the covariance matrix for the intercept and slope (linear time) term unstructured.</li>
 </ol>
 <!-- Create a table comparing the `-2loglikelihood` values, the `AIC`, and `BIC`. What are your conclusions? -->
 <div class="RUsers">
@@ -460,7 +460,7 @@ $(document).ready(function () {
 <p>You may choose a random effect for the intercept and for the slope of the variable <code>time_c</code>, but you will not be able to choose a random effect for quadratic time in your model. Although SPSS will estimate the quadratic term, R would refuse, and rightly so. There are too little observations (3 and sometimes even less per child) to correctly identify a random quadratic term as well.</p>
 <p>Your model will look as follows:</p>
 <span class="math display">\[\begin{aligned}
-Y_{IMP} &amp;= b_{0i} + b_{1i}\cdot X_{time_c}+ b_2\cdot X_{time_c}^2 + b_3\cdot X_{trt}\cdot X_{time_c} + b_4\cdot X_{trt}\cdot X_{time_c}^2 + e_{ij} \\
+Y_{IMP} &amp;= b_{0i} + b_{1i}\cdot X_{time_c}+ b_2\cdot X_{trt} + b_3\cdot X_{time_c}^2 + b_4\cdot X_{trt}\cdot X_{time_c} + b_5\cdot X_{trt}\cdot X_{time_c}^2 + e_{ij} \\
 
 b_{0i} &amp;= \beta_{00} + a_{0i} \\
 b_{1i} &amp;= \beta_{10} + a_{1i} 

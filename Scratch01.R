@@ -593,14 +593,37 @@ data("reedfrogs")
 d <- reedfrogs
 my.var <- function(x) return(var(x)*(length(x)-1)/length(x))
 
+# Number of groups
+nj <- 50
+j <- rep(1:nj, rep(ni,nj))
 
-nj <- 7
+# Number of individuals in each group
 ni <- 100
-j <- 1:nj
-mu_j <- rnorm(nj, 100, 20)
+
+# Generate the mu for each group
+mu_.j <- rep(rnorm(ni, 100, 20), rep(nj, ni))
+sigma_jsquare <- var(mu_.j)
+
+Y_ij <- rnorm(ni*nj, mu_.j, sd=10 )
+
+Ybar_.. <- mean(Y_ij)
+Ybar_
 
 
-mu_ij <- rep(mu_j,ni) 
+# The variation between the groups
+sigma_jsquare <- var(Ybar_j.)
+sigma_jsquare
+
+Y_ij <- rnorm(ni*nj, Ybar_j., sd=10 )
+
+var(Y_ij)
+
+
+# Calculate the global mean
+Ybar_.. <- mean(Ybar_j.)
+
+
+
 ij <- factor(rep(j,ni))
 y_ij <- rnorm(ni*nj, mu_ij, 10)
 
@@ -678,3 +701,37 @@ mdl <- gee(cbind(Count, TOTAL-Count)~Age, id=Study,
            family=binomial, 
            data=d)
 summary(mdl)
+
+
+
+
+
+x <- read.delim("clipboard")
+names(x) <- c("score", "phase")
+str(x)
+x %>% group_by(phase) %>% summarize(mn=mean(score), sd=sd(score))
+# x %>% filter(phase=="1st phase (Individual)") -> x1
+# x %>% filter(phase!="1st phase (Individual)") -> x2
+# summary(x1)
+# summary(x2)
+lm(score~phase, data=x) %>% summary()
+
+
+x %>% 
+  mutate(phase=ifelse(phase=="1st phase (Individual)",1,2)) %>% 
+  mutate(score=ifelse(phase==1,100*score/28,100*score/28)) %>% 
+  ggplot() + geom_histogram(aes(x=score, fill=factor(phase), 
+                                y=..density..), 
+                            binwidth = 5, position=  "dodge") + 
+  geom_density(aes(x=score, fill=factor(phase)), alpha=.6, color=NA) + 
+  scale_x_continuous(breaks=seq(10,100,by=10))
+
+
+
+x %>% 
+  mutate(phase=ifelse(phase=="1st phase (Individual)",1,2)) %>% 
+  mutate(score=ifelse(phase==1,100*score/23,100*score/21)) %>% 
+  ggplot() + geom_histogram(aes(x=score, fill=factor(phase), 
+                                y=..density..), 
+                            binwidth = 10, position=  "dodge") + 
+  geom_density(aes(x=score, fill=factor(phase)), alpha=.6, color=NA)
