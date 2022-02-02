@@ -169,7 +169,7 @@ b_{1i} &= \beta_{10} + a_{1i}
 \end{aligned}
 
 *R Users* : 
-The formula you will be using in your `reml` function would look like this (remember to center your `time` variable):
+The formula you will be using in your `lmer` function would look like this (remember to center your `time` variable):
 
 `IMP ~ 1 + treatment + time_c+ time_c2 + treatment*time_c + treatment*time_c2 + (1 + time_c | patientnr)`
 

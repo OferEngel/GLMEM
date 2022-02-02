@@ -466,7 +466,7 @@ b_{0i} &amp;= \beta_{00} + a_{0i} \\
 b_{1i} &amp;= \beta_{10} + a_{1i} 
 
 \end{aligned}\]</span>
-<p><em>R Users</em> : The formula you will be using in your <code>reml</code> function would look like this (remember to center your <code>time</code> variable):</p>
+<p><em>R Users</em> : The formula you will be using in your <code>lmer</code> function would look like this (remember to center your <code>time</code> variable):</p>
 <p><code>IMP ~ 1 + treatment + time_c+ time_c2 + treatment*time_c + treatment*time_c2 + (1 + time_c | patientnr)</code></p>
 </div>
 <ol start="4" style="list-style-type: lower-alpha">
