@@ -735,3 +735,74 @@ x %>%
                                 y=..density..), 
                             binwidth = 10, position=  "dodge") + 
   geom_density(aes(x=score, fill=factor(phase)), alpha=.6, color=NA)
+
+
+
+
+p*200M + (1-p)*0>100M
+p*sqrt(200M)>sqrt(100M)
+p>sqrt(1/2)
+
+
+library( palmerpenguins )
+d <- penguins %>% na.omit()
+d
+dat_penguins <- penguins %>% 
+  dplyr::select(species, bill_depth_mm, body_mass_g) %>% 
+  # duplicate species variable for coloring & grouping ---
+  mutate(species_category = species) %>% 
+  drop_na()
+# species colors used in the palmerpenguins readme ----
+colors_penguins <- c(
+  "Adelie" = "darkorange",
+  "Chinstrap" = "purple",
+  "Gentoo" = "cyan4"
+)
+
+
+dat_penguins %>% 
+  # add stack for all species to be analyzed together ----
+bind_rows(dat_penguins %>% mutate(species_category = "All")) %>% 
+  # now examine by 3 species plus all ----
+group_by(species_category) %>% 
+  nest() %>% 
+  # within each group, compute base n and correlation ----
+mutate(
+  base_n = map_int(data, nrow),
+  corr = map(data, ~ cor.test(x = .x$bill_depth_mm, y = .x$body_mass_g) %>% broom::tidy())
+) %>% 
+  ungroup() %>% 
+  # bring results back to raw data ----
+unnest(c(data, corr)) %>% 
+  mutate(
+    # create ordered facet label for plotting ----
+    species_category = fct_relevel(species_category, "Gentoo", "Chinstrap", "Adelie", "All"),
+    corr_label =  glue::glue("{species_category}\nn = {base_n}\n r = {scales::number(estimate, 0.01)}"),
+    corr_label = fct_reorder(as.character(corr_label), as.numeric(species_category))
+  ) %>% 
+  # create scatter plots ----
+ggplot(aes(x = bill_depth_mm, y = body_mass_g)) +
+  geom_point(aes(color = species), alpha = 0.5, show.legend = FALSE) +
+  geom_smooth(method = "lm", color = "darkgray", se = FALSE) +
+  facet_wrap(. ~ corr_label, ncol = 4) +
+  scale_color_manual(values = colors_penguins) + 
+  theme_shannon()
+
+
+df <- tibble(x = c(1, 1, 1, 2, 2, 3), y = 1:6, z = 6:1)
+# Note that we get one row of output for each unique combination of
+# non-nested variables
+df %>% nest(data = c(y, z)) 
+# chop does something similar, but retains individual columns
+df %>% chop(c(y, z))
+
+# use tidyselect syntax and helpers, just like in dplyr::select()
+df %>% nest(data = any_of(c("y", "z")))
+
+iris %>% nest(data = !Species)
+nest_vars <- names(iris)[1:4]
+iris %>% nest(data = any_of(nest_vars))
+iris %>%
+  nest(petal = starts_with("Petal"), sepal = starts_with("Sepal"))
+iris %>%
+  nest(width = contains("Width"), length = contains("Length"))

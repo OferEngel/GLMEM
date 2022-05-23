@@ -97,10 +97,10 @@ This exercise examines the differences between using the linear regression model
 
 tribble(
   ~`column name`, ~`description`, 
-  "ID",    "Low Birth Weight Baby (1=Yes under 2500g, 0=No)",
-  "LOW",   "Mother's age in years",
-  "AGE",   "Weight at Last Period",
-  "LWT",   "Race (1=White, 2=Black, 3=Other)",
+  "ID",    "Identification Code", 
+  "LOW",   "Low Birth Weight Baby (1=Yes under 2500g, 0=No)",
+  "AGE",   "Mother's age in years",
+  "LWT",   "Weight at Last Period",
   "SMOKE", "Smoke during Pregnancy (1=Yes, 0=No)",
   "PTL",   "History of Premature Labour (# of times)",
   "HT",    "History of Hypertension (1=Yes, 0=No)",
