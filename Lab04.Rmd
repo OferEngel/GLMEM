@@ -356,7 +356,7 @@ Try using `library(emmeans)` and add `mode="df.error"` to circumvent Satterthwai
 
 
 
-# Exercise (bonus)
+# Exercise 2 (BONUS EXERCISE)
 
 <div class="column-right-text-left">
 

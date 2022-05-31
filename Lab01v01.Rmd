@@ -132,7 +132,7 @@ modelsummary(list(mdl.w, mdl.h, mdl.hw), stars=TRUE)
 ```
 
 
-# Exercise 2
+# Exercise 2 (BONUS EXERCISE)
 
 You may choose between this exercise and exercise 3 (You may also do both!). 
 

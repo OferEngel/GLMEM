@@ -354,7 +354,7 @@ Add a fictitious case with Age = 78 and Total = 100 to the dataset. Run the anal
 c.	Fit a Poisson model to the data, with and without a correction for over-dispersion (use Pearson Chi-square). Mind the offset! Compare the results with the results of the lecture. Which model do you prefer, and why?
 
 
-# Exercise 3: Simpson's Paradox
+# Exercise 3: Simpson's Paradox (BONUS EXERCISE)
 
 <div class="column-right">
 
