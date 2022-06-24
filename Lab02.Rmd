@@ -2,6 +2,8 @@
 title: "GLME: Lab 2"
 #author: "Ofer Engel"
 output: html_document
+editor_options: 
+  chunk_output_type: console
 ---
 
 <style>
@@ -100,7 +102,7 @@ tribble(
   "ID",    "Identification Code", 
   "LOW",   "Low Birth Weight Baby (1=Yes under 2500g, 0=No)",
   "AGE",   "Mother's age in years",
-  "LWT",   "Weight at Last Period",
+  "LWT",   "Weight of mother at last menstrual period (Pounds)",
   "SMOKE", "Smoke during Pregnancy (1=Yes, 0=No)",
   "PTL",   "History of Premature Labour (# of times)",
   "HT",    "History of Hypertension (1=Yes, 0=No)",
@@ -168,7 +170,11 @@ m1 <- lm(BWT ~ SMOKE + LWT, data=d)
 m2 <- glm(BWT ~ SMOKE + LWT, data=d)
 confint(m1)
 confint(m2)
-modelsummary(list(m1, m2), stars=TRUE)
+modelsummary(list(OLS=m1, glm=m2), stars=TRUE, gof_omit="F|B|Lo",  estimate = "{estimate}{stars} [{conf.low}, {conf.high}]")
+
+# Notice that although the std.errors are the
+# same, the confint is different. This is because the critical values are different, the `lm` critical value is based on a t-distribution, the `glm` based on a normal distribution, and qt(0.975, df=186)  = 1.9728 whereas qnorm(0.975) = 1.959964.
+
 
 # Calculate the residual standard error: 
 sqrt(sum((residuals(m1))^2)/186)
